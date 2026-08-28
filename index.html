@@ -21,7 +21,7 @@
   <div class="wrap">
     <h1>Dankann Weissmüller</h1>
     <p class="tagline">I build games and the pipelines that ship them.</p>
-    <p class="role">Senior game engineer. Unity and C# gameplay and editor tooling, plus the CI/CD, build and cloud infrastructure that gets those builds to players.</p>
+    <p class="role">DevOps and game engineer. Two infrastructure migrations with no interrupted releases, and build tooling used every day by a team of roughly fifty developers and QA.</p>
     <p class="meta">Porto Alegre, Brazil · Remote</p>
     <ul class="links">
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
@@ -39,7 +39,7 @@
     <div class="lede">
       <p>Ten years in games. I'm now <strong>DevOps Engineer at Ironbelly Studios on Godforge</strong>, a live free-to-play title, after joining the project as Senior Unity Engineer. I work on both sides of the release: the Unity code players run, and the infrastructure that turns a changelist into a build in their hands.</p>
       <p>Godforge's Jenkins ran on bare-metal machines. I built a new build environment from scratch on AWS with Terraform (VPC and networking, an EC2 Jenkins controller, an EBS-persisted agent fleet with self-healing volume attach and detach) and migrated CI onto it. Separately, I moved the game's build and release pipelines from Azure to a Metaplay backend. Neither migration stopped releases. After that I made build cost visible, taking cost tracking from a one-shot script to a live panel in an internal ops dashboard I built on Node.js and AWS Lambda.</p>
-      <p>Alongside that: multi-platform Unity pipelines for Android, iOS and macOS, a ground-up rewrite of our in-editor build tool in UI Toolkit, automated Perforce merge-conflict resolution, and incremental content-update detection so content changes stop triggering full rebuilds. Over 2,000 submitted changes in 18 months.</p>
+      <p>Alongside that: multi-platform Unity pipelines that ship Android, iOS, Windows and macOS from one codebase, a ground-up rewrite of our in-editor build tool in UI Toolkit, automated Perforce merge-conflict resolution, and change detection so we only build what a change actually affects. A build with no cache takes up to four hours and a full cached build still takes over an hour, so skipping the Addressables build or the client build when nothing touched them gives real time back.</p>
       <p>Before Godforge I shipped C++ gameplay systems on Fractured Veil, a multiplayer RPG on Steam, led an engineering team across concurrent Unity projects, and built realtime multiplayer for a VR/AR language-learning app on Mirror and AWS GameLift.</p>
     </div>
   </div>
@@ -64,8 +64,16 @@
         <span class="more">Read the case study</span>
       </a>
 
+      <a class="card" href="work/devops-dashboard.html">
+        <p class="kicker">DevOps</p>
+        <h3>One place for everything DevOps</h3>
+        <p>An internal dashboard on Node.js and AWS Lambda: check out a build, see versions, environments and backend state, compare performance across devices, and ask the DevOps team for something without sending a chat message.</p>
+        <span class="more">Read the case study</span>
+      </a>
+
       <a class="card" href="work/gameplay.html">
         <p class="kicker">Gameplay</p>
+        <img class="card-art" src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy">
         <h3>Gameplay systems across engines</h3>
         <p>Crafting, inventory, quests and weather in Unreal and C++. Realtime multiplayer in Unity on Mirror and GameLift. Ten years of shipping games.</p>
         <span class="more">Read the case study</span>
@@ -80,12 +88,12 @@
     <p class="eyebrow">Shipped</p>
     <ul class="shipped">
       <li>
-        <span class="title">Godforge</span>
+        <span class="title"><img class="art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">Godforge</span>
         <span class="what">Live free-to-play title. Unity and C#, plus ownership of build, release and cloud infrastructure. <a href="https://godforge.gg/" rel="noopener">Play it at godforge.gg</a></span>
         <span class="when">2024 to present</span>
       </li>
       <li>
-        <span class="title">Fractured Veil</span>
+        <span class="title"><img class="art" src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy">Fractured Veil</span>
         <span class="what">Multiplayer RPG on Steam. Gameplay systems, audio and UI in C++ and Unreal Engine. <a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">View on Steam</a></span>
         <span class="when">2023 to 2024</span>
       </li>

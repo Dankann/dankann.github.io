@@ -26,6 +26,14 @@
     <p class="eyebrow">Case study · Infrastructure</p>
     <h1>A build platform for a live F2P game</h1>
     <p class="standfirst"><a href="https://godforge.gg/" rel="noopener">Godforge</a> is a live free-to-play title at Ironbelly Studios. Over two years I built its build platform from scratch on AWS, ran two migrations without interrupting releases, and added cost tracking so the team can see what a build costs.</p>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>DevOps Engineer</dd></div>
+      <div><dt>Where</dt><dd>Ironbelly Studios, on Godforge</dd></div>
+      <div><dt>Dates</dt><dd>2024 to present</dd></div>
+      <div><dt>Stack</dt><dd>Jenkins, Terraform, AWS</dd></div>
+      <div><dt>Platforms</dt><dd>Android, iOS, Windows, macOS</dd></div>
+      <div><dt>Link</dt><dd><a href="https://godforge.gg/" rel="noopener">godforge.gg</a></dd></div>
+    </dl>
   </div>
 </header>
 
@@ -40,7 +48,7 @@
     <p>Three things shaped every decision.</p>
     <ul>
       <li><strong>Releases could not stop.</strong> A live game ships on its own cadence, and the migration had to happen underneath a team that kept building all day. There was no maintenance window to negotiate for.</li>
-      <li><strong>Unity builds are not stateless.</strong> A cold Unity project import and Addressables build costs tens of minutes. Any design that threw away the workspace between builds would buy tidy infrastructure with hours of engineer waiting time.</li>
+      <li><strong>Unity builds are not stateless.</strong> A build with no cache takes up to four hours, and even a full cached build takes over an hour. Any design that threw away the workspace between builds would buy tidy infrastructure with hours of engineer waiting time.</li>
       <li><strong>I would not be the only operator forever.</strong> Anything that only worked because I knew a trick was a liability. That pushed the platform toward Terraform and toward pipelines that explain their own failures.</li>
     </ul>
 
@@ -52,7 +60,7 @@
     <figure>
       <svg viewBox="0 0 960 540" role="img" aria-labelledby="diagram-title diagram-desc">
         <title id="diagram-title">Godforge build platform architecture</title>
-        <desc id="diagram-desc">Perforce feeds an EC2 Jenkins controller inside a Terraform-provisioned AWS VPC. The controller dispatches to Android, iOS and macOS, and config and Addressables agents, each attaching a persistent EBS workspace volume. Agents publish artifacts to S3, which feeds the Metaplay backend and store and QA builds, and also feeds an ops dashboard alongside AWS Cost Explorer.</desc>
+        <desc id="diagram-desc">Perforce feeds an EC2 Jenkins controller inside a Terraform-provisioned AWS VPC. The controller dispatches to build agents covering Android and Windows, build agents covering iOS and macOS, and a config agent for Addressables, each attaching a persistent EBS workspace volume. Agents publish artifacts to S3, which feeds the Metaplay backend and store and QA builds, and also feeds an ops dashboard alongside AWS Cost Explorer.</desc>
         <defs>
           <marker id="ar" viewBox="0 0 9 9" refX="8" refY="4.5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path class="dg-arrow" d="M0,0 L9,4.5 L0,9 z"/>
@@ -80,10 +88,12 @@
         <path class="dg-line" d="M394,146 H423 V246 H444" marker-end="url(#ar)"/>
 
         <rect class="dg-box" x="452" y="80" width="190" height="52" rx="4"/>
-        <text class="dg-t" x="547" y="112" text-anchor="middle">Android agent</text>
+        <text class="dg-t" x="547" y="105" text-anchor="middle">Build agents</text>
+        <text class="dg-s" x="547" y="123" text-anchor="middle">ANDROID · WINDOWS</text>
 
         <rect class="dg-box" x="452" y="150" width="190" height="52" rx="4"/>
-        <text class="dg-t" x="547" y="182" text-anchor="middle">iOS / macOS agent</text>
+        <text class="dg-t" x="547" y="175" text-anchor="middle">Build agents</text>
+        <text class="dg-s" x="547" y="193" text-anchor="middle">IOS · MACOS</text>
 
         <rect class="dg-box" x="452" y="220" width="190" height="52" rx="4"/>
         <text class="dg-t" x="547" y="245" text-anchor="middle">Config agent</text>
@@ -138,7 +148,7 @@
     </figure>
 
     <h2>Pipelines on top</h2>
-    <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines across Android, iOS and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and what gets cleaned up.</p>
+    <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines covering Android, iOS, Windows and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and what gets cleaned up. Four platforms come out of one pipeline codebase, not four that drifted apart.</p>
     <p>Two pieces mattered more than their size suggests. The first is log parsing with prioritised error extraction. A Unity build log is tens of thousands of lines and the line that matters is rarely near the end, so the pipeline surfaces the actual failure instead of the last stack trace. The second is artifact upload, which started as a shell script, became Python, and ended as parallel Jenkins stages with tuned concurrency. Uploads had been failing intermittently under load for long enough that people had learned to just retry. After the rewrite that failure stopped happening.</p>
 
     <h2>Migrating without stopping</h2>
@@ -147,10 +157,10 @@
 
     <h2>Then, the cost</h2>
     <p>Nobody could say what a single build cost, so nobody could argue about whether it was worth it.</p>
-    <p>It started as a one-shot script, then became a daily table the team actually read, then a live panel in an internal ops dashboard I built on Node.js and AWS Lambda. The original script was retired once the panel replaced it. The dashboard also carries AWS Cost Explorer panels and a self-service request flow that files a Jira ticket and posts a Discord notification, so infrastructure requests stop arriving as direct messages that get lost.</p>
+    <p>It started as a one-shot script, then became a daily table the team actually read, then a live panel in an internal ops dashboard I built on Node.js and AWS Lambda. The original script was retired once the panel replaced it. That dashboard grew into the team's <a href="devops-dashboard.html">single place for everything DevOps</a>, and cost is one panel of it.</p>
 
     <h2>What it added up to</h2>
-    <p>Over 2,000 submitted changes in 18 months, across build infrastructure, pipelines and backend migration. The platform is in Terraform, the pipelines are in one codebase, and what a build costs is on a dashboard anyone on the team can open.</p>
+    <p>The platform is defined in Terraform, the pipelines live in one codebase that ships four platforms, and what a build costs is on a dashboard anyone can open. Roughly fifty developers and QA build on it every day, and neither migration cost them a release.</p>
 
     <ul class="stack">
       <li>Terraform</li>
@@ -173,6 +183,7 @@
     <ul class="links">
       <li><a href="../index.html">Home</a></li>
       <li><a href="build-tooling.html">Build tooling</a></li>
+      <li><a href="devops-dashboard.html">DevOps dashboard</a></li>
       <li><a href="gameplay.html">Gameplay</a></li>
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
     </ul>

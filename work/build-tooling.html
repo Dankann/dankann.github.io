@@ -25,7 +25,15 @@
   <div class="wrap">
     <p class="eyebrow">Case study · Tooling</p>
     <h1>Rewriting the build tool engineers actually use</h1>
-    <p class="standfirst">The Advanced Build Window is how everyone on Godforge configures and starts a build without going near Jenkins. I rewrote it from the ground up in Unity's UI Toolkit, on a controller architecture, with presets that hold exact parity to the CI pipeline and a mode that runs the whole game locally.</p>
+    <p class="standfirst">The Advanced Build Window is how a team of roughly fifty developers and QA on Godforge configures and starts a build without going near Jenkins. I rewrote it from the ground up in Unity's UI Toolkit, on a controller architecture, with presets that hold exact parity to the CI pipeline and a mode that runs the whole game locally.</p>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>DevOps Engineer</dd></div>
+      <div><dt>Where</dt><dd>Ironbelly Studios, on Godforge</dd></div>
+      <div><dt>Dates</dt><dd>2024 to present</dd></div>
+      <div><dt>Stack</dt><dd>Unity, C#, UI Toolkit</dd></div>
+      <div><dt>Platforms</dt><dd>Android, iOS, Windows, macOS</dd></div>
+      <div><dt>Link</dt><dd><a href="https://godforge.gg/" rel="noopener">godforge.gg</a></dd></div>
+    </dl>
   </div>
 </header>
 
@@ -101,7 +109,8 @@
     <p>I built automated merge-conflict resolution and delivered it in 16 days: automatic checkout, automatic resolve where the resolution is unambiguous, per-user resolution changelists so the remaining decisions land with the person who owns them, and summary reports so nothing resolves silently. It only automates the unambiguous cases. Everything else goes to a human with the context to decide, instead of the bot guessing wrong in someone's stream.</p>
 
     <h2>Around the tool: not rebuilding what did not change</h2>
-    <p>Content changes were also triggering full rebuilds that were not needed. I built incremental content-update detection that reconciles Unity's own build reports against source-control changes to decide whether a full rebuild is warranted.</p>
+    <p>A build with no cache takes up to four hours. Even a full cached build takes over an hour. Content changes were triggering those full rebuilds when nothing about them needed one.</p>
+    <p>I built incremental content-update detection that reconciles Unity's own build reports against source-control changes to decide what actually has to run. If a change does not touch Addressables content, the Addressables build is skipped. If it does not touch client code, the client build is skipped. An incremental build only pays for what the change affects, and that is usually a small fraction of the full run.</p>
     <p>Guessing what a content change affects from file paths is a heuristic that eventually ships a broken build. The build report says what Unity actually included, so the pipeline skips work it can prove is unnecessary and runs the full build when it cannot.</p>
 
     <ul class="stack">
@@ -123,6 +132,7 @@
     <ul class="links">
       <li><a href="../index.html">Home</a></li>
       <li><a href="build-platform.html">Build platform</a></li>
+      <li><a href="devops-dashboard.html">DevOps dashboard</a></li>
       <li><a href="gameplay.html">Gameplay</a></li>
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
     </ul>
