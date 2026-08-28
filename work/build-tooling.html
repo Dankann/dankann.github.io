@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rewriting the build tool engineers actually use — Dankann Weissmüller</title>
-<meta name="description" content="A ground-up rewrite of Godforge's in-editor build window in Unity UI Toolkit: controller architecture, presets with CI parity, and a two-step prepare and build flow.">
+<title>Rewriting the build tool engineers actually use · Dankann Weissmüller</title>
+<meta name="description" content="A ground-up rewrite of Godforge's in-editor build window in Unity UI Toolkit: controller architecture, presets with CI parity, a two-step prepare and build flow, and a fully local build and test setup.">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rewriting the build tool engineers actually use">
-<meta property="og:description" content="Unity UI Toolkit, a controller architecture, build presets that hold parity with the CI pipeline, and a two-step flow that fails in seconds instead of twenty minutes.">
+<meta property="og:description" content="Unity UI Toolkit, a controller architecture, build presets that hold parity with the CI pipeline, a two-step flow that fails in seconds instead of twenty minutes, and a local backend and Addressables server.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230e1014'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23e0a458'%3EDW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@
   <div class="wrap">
     <p class="eyebrow">Case study · Tooling</p>
     <h1>Rewriting the build tool engineers actually use</h1>
-    <p class="standfirst">The Advanced Build Window is how everyone on Godforge configures and starts a build without going near Jenkins. I rewrote it from the ground up in Unity's UI Toolkit, on a controller architecture, with presets that hold exact parity to the CI pipeline.</p>
+    <p class="standfirst">The Advanced Build Window is how everyone on Godforge configures and starts a build without going near Jenkins. I rewrote it from the ground up in Unity's UI Toolkit, on a controller architecture, with presets that hold exact parity to the CI pipeline and a mode that runs the whole game locally.</p>
   </div>
 </header>
 
@@ -33,19 +33,18 @@
   <div class="wrap">
 
     <h2>The tool nobody wanted to touch</h2>
-    <p>The original build window was an IMGUI script that had accumulated years of features. It worked, in the sense that people used it daily and had memorised its quirks. Its real cost was elsewhere: build configuration lived in the UI code, so there was no way to say "build the same thing CI builds," and no way to change the tool without risking every workflow that depended on it.</p>
-    <p>The failure mode that hurt most was ordinary. An engineer picks options, hits build, walks away, and comes back twenty minutes later to a failure caused by a setting that was wrong before the first asset compiled. Multiply that across a team on a live title and it is a meaningful amount of the week spent waiting to be told something obvious.</p>
+    <p>The original build window was an IMGUI script that had accumulated years of features. It worked, in the sense that people used it daily and had memorised its quirks. The cost was in the structure: build configuration lived in the UI code, so there was no way to say "build the same thing CI builds," and no way to change the tool without risking every workflow that depended on it.</p>
+    <p>The most common failure was ordinary. An engineer picks options, hits build, walks away, and comes back twenty minutes later to a failure caused by a setting that was wrong before the first asset compiled. Across a team on a live title, that is a lot of hours spent waiting to be told something obvious.</p>
 
     <h2>Separating the tool from its window</h2>
-    <p>The rewrite moved to UI Toolkit and, more importantly, to a controller architecture: the build configuration, validation and execution logic live outside the window, and the window renders them. That boundary is what made everything after it possible. Build logic became testable and callable without an editor window open, and the UI became a thing that could be changed without fear.</p>
-    <p>Choosing UI Toolkit over keeping IMGUI was not about aesthetics. IMGUI's immediate-mode model actively encourages mixing state into draw code, which is exactly the coupling the old tool suffered from. Fighting that on every future change would have cost more than the rewrite.</p>
+    <p>The rewrite moved to UI Toolkit and to a controller architecture: build configuration, validation and execution logic live outside the window, and the window renders them. Build logic became testable and callable without an editor window open, and the UI could be changed without breaking someone's workflow.</p>
+    <p>IMGUI's immediate-mode model encourages mixing state into draw code, which is the coupling the old tool suffered from. Fighting that on every future change would have cost more than the rewrite did.</p>
 
     <h2>Presets, and parity with CI</h2>
-    <p>Build configuration became named, reusable presets — and the presets map exactly onto the Jenkins pipeline's own parameters. That parity is the whole point. "It builds locally but fails in CI" is almost always a configuration divergence, and the cheapest way to eliminate a class of bug is to make the divergence impossible to express. An engineer reproducing a CI failure now picks the preset CI used, rather than reconstructing it from memory and a pipeline page.</p>
+    <p>Build configuration became named, reusable presets, and the presets map exactly onto the Jenkins pipeline's own parameters. "It builds locally but fails in CI" is almost always a configuration difference, so sharing the schema makes that difference impossible to express. An engineer reproducing a CI failure picks the preset CI used instead of reconstructing it from memory and a pipeline page.</p>
 
     <h2>Two steps instead of one</h2>
-    <p>The build flow splits into PREPARE and BUILD. Prepare does validation and configuration resolution and nothing expensive; build does the work. Everything that can be known to be wrong up front — a missing platform setting, an unresolvable config, an inconsistent preset — surfaces in seconds, at the desk, while the engineer is still looking at the screen.</p>
-    <p>It is a small structural change and it changed the tool's character. Failures moved from the end of a long wait to the start of a short one.</p>
+    <p>The build flow splits into PREPARE and BUILD. Prepare does validation and configuration resolution and nothing expensive. Build does the work. Anything knowably wrong up front (a missing platform setting, an unresolvable config, an inconsistent preset) surfaces in seconds, while the engineer is still looking at the screen. Failures show up at the start of a short wait instead of the end of a long one.</p>
 
     <figure>
       <svg viewBox="0 0 960 340" role="img" aria-labelledby="flow-title flow-desc">
@@ -93,19 +92,17 @@
       <figcaption>Prepare resolves and validates; build executes. Everything knowable up front fails up front, and the preset schema is shared with the CI pipeline rather than mirrored by hand.</figcaption>
     </figure>
 
-    <h2>The Addressables cache tab</h2>
-    <p>Addressables state is the most common source of "it works on my machine" on a Unity project of this size, and until then it was managed by folklore and manual folder deletion. The tool got a dedicated tab exposing the Addressables build cache directly: what is there, and how to clear it. Making the invisible visible removed a recurring support conversation more effectively than any amount of documentation would have.</p>
+    <h2>Running everything locally</h2>
+    <p>The window also runs the whole thing on the developer's machine. It can start a local game backend and a local Addressables server, so an engineer can build and test end to end without touching the shared dev environment that QA tests against every day. Before that, trying something out meant putting it on the shared environment and risking everyone else's day.</p>
+    <p>Addressables state is a common source of "it works on my machine" on a Unity project of this size, and it used to be managed by folklore and manual folder deletion. The window exposes the Addressables build cache directly: what is in it, and how to clear it.</p>
 
     <h2>Around the tool: merge conflicts</h2>
-    <p>Editor tooling is one half of developer experience; the other half is everything that happens before a build is even worth starting. On a Perforce project with a large team, merge conflicts were a standing tax — recurring, manual, and always landing on whoever noticed first.</p>
-    <p>I built automated merge-conflict resolution and delivered it in 16 days: automatic checkout, automatic resolve where resolution is unambiguous, per-user resolution changelists so the remaining decisions land with the person who owns them, and summary reports so nothing resolves silently. The design principle was narrow on purpose — automate only what is genuinely unambiguous, and route everything else to a human with context, rather than guessing and being confidently wrong in someone's stream.</p>
+    <p>On a Perforce project with a large team, merge conflicts were constant manual work that landed on whoever noticed them first.</p>
+    <p>I built automated merge-conflict resolution and delivered it in 16 days: automatic checkout, automatic resolve where the resolution is unambiguous, per-user resolution changelists so the remaining decisions land with the person who owns them, and summary reports so nothing resolves silently. It only automates the unambiguous cases. Everything else goes to a human with the context to decide, instead of the bot guessing wrong in someone's stream.</p>
 
     <h2>Around the tool: not rebuilding what did not change</h2>
-    <p>The other tax was full rebuilds triggered by content changes that did not need them. I built incremental content-update detection that reconciles Unity's own build reports against source-control changes to decide whether a full rebuild is actually warranted.</p>
-    <p>Using the build report as the source of truth mattered. Inferring what a content change affects from file paths is a heuristic that eventually ships a broken build; asking Unity what it actually included is an answer. The pipeline skips the work it can prove is unnecessary and does the full build when it cannot.</p>
-
-    <h2>The through-line</h2>
-    <p>All three pieces are the same idea applied at different scales: move the moment of failure earlier, and make the state that decides success visible to the person who has to act on it. That is most of what build tooling is.</p>
+    <p>Content changes were also triggering full rebuilds that were not needed. I built incremental content-update detection that reconciles Unity's own build reports against source-control changes to decide whether a full rebuild is warranted.</p>
+    <p>Guessing what a content change affects from file paths is a heuristic that eventually ships a broken build. The build report says what Unity actually included, so the pipeline skips work it can prove is unnecessary and runs the full build when it cannot.</p>
 
     <ul class="stack">
       <li>Unity</li>
@@ -129,7 +126,7 @@
       <li><a href="gameplay.html">Gameplay</a></li>
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
     </ul>
-    <p class="colophon">Dankann Weissmüller — Porto Alegre, Brazil</p>
+    <p class="colophon">Dankann Weissmüller · Porto Alegre, Brazil</p>
   </div>
 </footer>
 

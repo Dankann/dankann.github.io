@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dankann Weissmüller — Senior Game Engineer</title>
+<title>Dankann Weissmüller · Senior Game Engineer</title>
 <meta name="description" content="Senior game engineer, ten years in games. Unity and C# gameplay and editor tooling, plus the Jenkins, Terraform and AWS build infrastructure that ships live titles.">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Dankann Weissmüller — Senior Game Engineer">
+<meta property="og:title" content="Dankann Weissmüller · Senior Game Engineer">
 <meta property="og:description" content="I build games and the pipelines that ship them. Unity, C#, Jenkins, Terraform, AWS.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230e1014'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23e0a458'%3EDW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,9 +37,9 @@
   <div class="wrap">
     <p class="eyebrow">About</p>
     <div class="lede">
-      <p>Ten years in games, currently <strong>Senior Unity Engineer at Ironbelly Studios on Godforge</strong>, a live free-to-play title. I work on both sides of the release: the Unity code players run, and the infrastructure that turns a changelist into a build in their hands.</p>
-      <p>The last two years have been a single arc. I built Godforge's build platform from scratch on AWS with Terraform — VPC and networking, an EC2 Jenkins controller, an EBS-persisted agent fleet with self-healing volume attach and detach. Then I migrated the existing Jenkins estate off Azure onto it, and moved the game's build and release pipelines from Azure to a Metaplay backend, both without interrupting releases. Then I made the cost visible, taking build-cost tracking from a one-shot script to a live panel in an internal ops dashboard I built on Node.js and AWS Lambda.</p>
-      <p>Alongside that: multi-platform Unity pipelines for Android, iOS and macOS; a ground-up rewrite of our in-editor build tool in UI Toolkit; automated Perforce merge-conflict resolution; incremental content-update detection so content changes stop triggering full rebuilds. Over 2,000 submitted changes in 18 months.</p>
+      <p>Ten years in games. I'm now <strong>DevOps Engineer at Ironbelly Studios on Godforge</strong>, a live free-to-play title, after joining the project as Senior Unity Engineer. I work on both sides of the release: the Unity code players run, and the infrastructure that turns a changelist into a build in their hands.</p>
+      <p>Godforge's Jenkins ran on bare-metal machines. I built a new build environment from scratch on AWS with Terraform (VPC and networking, an EC2 Jenkins controller, an EBS-persisted agent fleet with self-healing volume attach and detach) and migrated CI onto it. Separately, I moved the game's build and release pipelines from Azure to a Metaplay backend. Neither migration stopped releases. After that I made build cost visible, taking cost tracking from a one-shot script to a live panel in an internal ops dashboard I built on Node.js and AWS Lambda.</p>
+      <p>Alongside that: multi-platform Unity pipelines for Android, iOS and macOS, a ground-up rewrite of our in-editor build tool in UI Toolkit, automated Perforce merge-conflict resolution, and incremental content-update detection so content changes stop triggering full rebuilds. Over 2,000 submitted changes in 18 months.</p>
       <p>Before Godforge I shipped C++ gameplay systems on Fractured Veil, a multiplayer RPG on Steam, led an engineering team across concurrent Unity projects, and built realtime multiplayer for a VR/AR language-learning app on Mirror and AWS GameLift.</p>
     </div>
   </div>
@@ -53,21 +53,21 @@
       <a class="card" href="work/build-platform.html">
         <p class="kicker">Infrastructure</p>
         <h3>A build platform for a live F2P game</h3>
-        <p>Greenfield AWS and Terraform build infrastructure, two legacy migrations with no interruption to shipping, then cost-per-build observability on top.</p>
+        <p>New AWS and Terraform build infrastructure, two migrations that never stopped releases, then cost-per-build tracking on top.</p>
         <span class="more">Read the case study</span>
       </a>
 
       <a class="card" href="work/build-tooling.html">
         <p class="kicker">Tooling</p>
         <h3>Rewriting the build tool engineers actually use</h3>
-        <p>A UI Toolkit rewrite with presets that hold parity to the CI pipeline, and a two-step flow that catches configuration errors before a build starts.</p>
+        <p>A UI Toolkit rewrite with presets that hold parity to the CI pipeline, a two-step flow that catches configuration errors before a build starts, and a local backend and Addressables server so a developer can build and test on their own machine.</p>
         <span class="more">Read the case study</span>
       </a>
 
       <a class="card" href="work/gameplay.html">
         <p class="kicker">Gameplay</p>
         <h3>Gameplay systems across engines</h3>
-        <p>Crafting, inventory, quests and weather in Unreal and C++. Realtime multiplayer in Unity on Mirror and GameLift. Ten years of shipping either way.</p>
+        <p>Crafting, inventory, quests and weather in Unreal and C++. Realtime multiplayer in Unity on Mirror and GameLift. Ten years of shipping games.</p>
         <span class="more">Read the case study</span>
       </a>
 
@@ -81,23 +81,23 @@
     <ul class="shipped">
       <li>
         <span class="title">Godforge</span>
-        <span class="what">Live free-to-play title. Unity and C#, plus ownership of build, release and cloud infrastructure.</span>
-        <span class="when">2024 — present</span>
+        <span class="what">Live free-to-play title. Unity and C#, plus ownership of build, release and cloud infrastructure. <a href="https://godforge.gg/" rel="noopener">Play it at godforge.gg</a></span>
+        <span class="when">2024 to present</span>
       </li>
       <li>
         <span class="title">Fractured Veil</span>
-        <span class="what">Multiplayer RPG on Steam. Gameplay systems, audio and UI in C++ and Unreal Engine.</span>
-        <span class="when">2023 — 2024</span>
+        <span class="what">Multiplayer RPG on Steam. Gameplay systems, audio and UI in C++ and Unreal Engine. <a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">View on Steam</a></span>
+        <span class="when">2023 to 2024</span>
       </li>
       <li>
         <span class="title">Realvi</span>
         <span class="what">VR/AR language-learning app. Realtime multiplayer in Unity on Mirror networking and AWS GameLift.</span>
-        <span class="when">2019 — 2021</span>
+        <span class="when">2019 to 2021</span>
       </li>
       <li>
         <span class="title">Earlier titles</span>
         <span class="what">Multi-platform releases in PlayCanvas WebGL and Unity across full project lifecycles, and an Unreal Engine indie title.</span>
-        <span class="when">2016 — 2019</span>
+        <span class="when">2016 to 2019</span>
       </li>
     </ul>
   </div>
@@ -136,7 +136,7 @@
       <li><a href="https://www.linkedin.com/in/dankannweissmuller" rel="me noopener">LinkedIn</a></li>
       <li><a href="https://github.com/Dankann" rel="me noopener">GitHub</a></li>
     </ul>
-    <p class="colophon">Dankann Weissmüller — Porto Alegre, Brazil</p>
+    <p class="colophon">Dankann Weissmüller · Porto Alegre, Brazil</p>
   </div>
 </footer>
 

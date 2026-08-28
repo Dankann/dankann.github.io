@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gameplay systems across engines — Dankann Weissmüller</title>
+<title>Gameplay systems across engines · Dankann Weissmüller</title>
 <meta name="description" content="Crafting, inventory, quests, weather, audio and UI in C++ and Unreal on Fractured Veil; realtime multiplayer in Unity on Mirror and AWS GameLift; a decade of multi-platform shipping.">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="article">
@@ -25,29 +25,36 @@
   <div class="wrap">
     <p class="eyebrow">Case study · Gameplay</p>
     <h1>Gameplay systems across engines</h1>
-    <p class="standfirst">Before the infrastructure work, and alongside it, the job has always been gameplay code. Unreal and C++ on a shipped Steam RPG, Unity and C# on live and multiplayer products, and enough engine switching to have opinions about what actually transfers.</p>
+    <p class="standfirst">Before the infrastructure work, and alongside it, the job has always been gameplay code. Unreal and C++ on a shipped Steam RPG, Unity and C# on live and multiplayer products, and a decade of switching between engines.</p>
   </div>
 </header>
 
 <main class="case">
   <div class="wrap">
 
-    <h2>Fractured Veil — Unreal, C++</h2>
-    <p>Fractured Veil is a multiplayer RPG shipped on Steam. I worked on it as Senior Unreal Engineer, and the systems I owned were the ones players spend their time inside: crafting, inventory, quests and weather.</p>
-    <p>Those four are more entangled than they look. Crafting and inventory share item identity and have to agree about it across the network; quests observe both and cannot be allowed to poll them; weather is a world-state system that every other system wants to read and none should be allowed to write. Most of the engineering was in drawing those boundaries clearly enough that designers could add content without an engineer in the loop.</p>
-    <p>I also built the title's audio systems and its UI and widget layer, and developed internal Unreal plugins and frameworks that were reused across the project — the sort of shared scaffolding that pays back only if it is kept genuinely general.</p>
+    <h2>Fractured Veil: Unreal and C++</h2>
+    <p>Fractured Veil is a multiplayer RPG shipped on Steam. I worked on it as Senior Unreal Engineer, and the systems I owned were the ones players spend their time inside: crafting, inventory, quests and weather. <a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">View it on Steam</a>.</p>
+    <p>Those four are more entangled than they look. Crafting and inventory share item identity and have to agree about it across the network. Quests observe both without polling them. Weather is world state that every other system reads and none should write. Most of the work was drawing those boundaries clearly enough that designers could add content without an engineer in the loop.</p>
+    <p>I also built the title's audio systems and its UI and widget layer, and developed internal Unreal plugins and frameworks that were reused across the project.</p>
 
-    <h2>Realvi — Unity, Mirror, AWS GameLift</h2>
-    <p>Before that I built realtime multiplayer for a VR/AR language-learning app: Mirror for netcode, AWS GameLift for session hosting and matchmaking. This is where the cloud work in my history actually starts, years before Terraform and Jenkins entered the picture — GameLift fleet configuration and session lifecycle is infrastructure work whether or not it is called that.</p>
-    <p>On the product side I implemented the scene management systems and an NPC conversation state machine driving the app's dialogue flows. Conversation in a language-learning context is a state machine with unusually unforgiving requirements: the learner can say the wrong thing, say nothing, or leave, and every one of those has to be a valid transition rather than a bug. I also integrated the AR and VR frameworks and contributed to the studio's programming guidelines.</p>
+    <figure class="video">
+      <div class="frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/DMwzd9c05dY" title="Fractured Veil official trailer" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <figcaption>The official Fractured Veil trailer.</figcaption>
+    </figure>
+
+    <h2>Realvi: Unity, Mirror, AWS GameLift</h2>
+    <p>Before that I built realtime multiplayer for a VR/AR language-learning app: Mirror for netcode, AWS GameLift for session hosting and matchmaking. That is where my cloud work starts, years before Terraform and Jenkins. GameLift fleet configuration and session lifecycle is infrastructure work whether or not it gets called that.</p>
+    <p>On the product side I implemented the scene management systems and an NPC conversation state machine driving the app's dialogue flows. The learner can say the wrong thing, say nothing, or walk away, and each of those has to be a valid transition instead of a bug. I also integrated the AR and VR frameworks and contributed to the studio's programming guidelines.</p>
 
     <h2>Leading, and the years before</h2>
-    <p>As Lead Unity Engineer I ran the engineering team across several concurrent web and mobile projects and owned code review and code quality standards for the team's output — which, on a team shipping in parallel, mostly means deciding what is worth blocking a merge over and being consistent about it.</p>
+    <p>As Lead Unity Engineer I ran the engineering team across several concurrent web and mobile projects and owned code review and code quality standards. On a team shipping in parallel, that mostly means deciding what is worth blocking a merge over and being consistent about it.</p>
     <p>Earlier I shipped multi-platform titles in PlayCanvas WebGL and Unity across full project lifecycles, from prototyping through release, and started out doing gameplay programming on an Unreal Engine indie title in 2016.</p>
 
-    <h2>What transfers</h2>
-    <p>Engines are less portable than people claim and more portable than juniors fear. The APIs do not transfer. What does is the shape of the problems: ownership of state, what is authoritative and what is a view of it, where to put the boundary so content can be added without code, and the discipline of deciding these things before a system has five callers instead of after.</p>
-    <p>Working across Unreal, Unity and PlayCanvas in the same decade is also the reason the build and infrastructure work came naturally. Once you have shipped the same kind of system three times in three engines, the interesting problem stops being the system and becomes everything around it.</p>
+    <h2>What transfers between engines</h2>
+    <p>The APIs do not transfer. The problems do: ownership of state, what is authoritative and what is only a view of it, and where to put the boundary so content can be added without code. Deciding that early is much cheaper than deciding it once a system has five callers.</p>
+    <p>Working across Unreal, Unity and PlayCanvas is also how I ended up doing build and infrastructure work.</p>
 
     <ul class="stack">
       <li>C++</li>
@@ -71,7 +78,7 @@
       <li><a href="build-tooling.html">Build tooling</a></li>
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
     </ul>
-    <p class="colophon">Dankann Weissmüller — Porto Alegre, Brazil</p>
+    <p class="colophon">Dankann Weissmüller · Porto Alegre, Brazil</p>
   </div>
 </footer>
 

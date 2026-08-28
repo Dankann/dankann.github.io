@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A build platform for a live F2P game — Dankann Weissmüller</title>
-<meta name="description" content="Building Godforge's build and release platform from scratch on AWS and Terraform, migrating two legacy pipelines onto it without interrupting releases, then adding cost-per-build observability.">
+<title>A build platform for a live F2P game · Dankann Weissmüller</title>
+<meta name="description" content="Building Godforge's build and release platform from scratch on AWS and Terraform, migrating CI and the game's backend pipelines onto new homes without interrupting releases, then adding cost-per-build tracking.">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="A build platform for a live F2P game">
-<meta property="og:description" content="Greenfield AWS and Terraform build infrastructure, two migrations with no interruption to shipping, then cost-per-build observability on top.">
+<meta property="og:description" content="New AWS and Terraform build infrastructure, two migrations that never stopped releases, then cost-per-build tracking on top.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230e1014'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23e0a458'%3EDW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@
   <div class="wrap">
     <p class="eyebrow">Case study · Infrastructure</p>
     <h1>A build platform for a live F2P game</h1>
-    <p class="standfirst">Godforge is a live free-to-play title at Ironbelly Studios. Over two years I built its build and release platform from scratch on AWS, moved two legacy pipelines onto it without interrupting releases, and then made what it costs visible to the people spending it.</p>
+    <p class="standfirst"><a href="https://godforge.gg/" rel="noopener">Godforge</a> is a live free-to-play title at Ironbelly Studios. Over two years I built its build platform from scratch on AWS, ran two migrations without interrupting releases, and added cost tracking so the team can see what a build costs.</p>
   </div>
 </header>
 
@@ -33,21 +33,21 @@
   <div class="wrap">
 
     <h2>Where it started</h2>
-    <p>The build estate I inherited was split across platforms and held together by convention. Jenkins ran on Azure; parts of the release path went through Azure Storage Queues and PlayFab CloudScript; agent machines carried state nobody could reproduce. When a build broke, the honest answer to "why" was usually "log into the machine and look."</p>
-    <p>None of that is unusual for a title that grew fast. It becomes a problem when the game is live: a broken pipeline is not a nuisance, it is a blocked patch. The mandate was to give Godforge a build platform that could be reasoned about, reproduced, and handed to somebody else.</p>
+    <p>The build estate I inherited was split across platforms and held together by convention. Jenkins ran on bare-metal machines. Parts of the release path went through Azure Storage Queues and PlayFab CloudScript. Agent machines carried state nobody could reproduce. When a build broke, the honest answer to "why" was usually "log into the machine and look."</p>
+    <p>None of that is unusual for a title that grew fast, but it hurts more when the game is live, because a broken pipeline is a blocked patch. The job was to give Godforge a build platform that could be reasoned about, reproduced, and handed to somebody else.</p>
 
     <h2>Constraints</h2>
     <p>Three things shaped every decision.</p>
     <ul>
       <li><strong>Releases could not stop.</strong> A live game ships on its own cadence, and the migration had to happen underneath a team that kept building all day. There was no maintenance window to negotiate for.</li>
-      <li><strong>Unity builds are not stateless.</strong> A cold Unity project import and Addressables build costs tens of minutes. Any design that threw away the workspace between builds would trade infrastructure hygiene for hours of engineer waiting time — a bad trade.</li>
-      <li><strong>I would not be the only operator forever.</strong> Anything that only worked because I knew a trick was a liability. That pushed the whole platform toward Terraform and toward pipelines that explain their own failures.</li>
+      <li><strong>Unity builds are not stateless.</strong> A cold Unity project import and Addressables build costs tens of minutes. Any design that threw away the workspace between builds would buy tidy infrastructure with hours of engineer waiting time.</li>
+      <li><strong>I would not be the only operator forever.</strong> Anything that only worked because I knew a trick was a liability. That pushed the platform toward Terraform and toward pipelines that explain their own failures.</li>
     </ul>
 
     <h2>The platform</h2>
-    <p>Everything is defined in Terraform: VPC and networking, security groups, IAM roles, the EC2 Jenkins controller, and the build agent fleet. The interesting part is not the resource list — it is what the agents do with their disks.</p>
-    <p>Unity agents keep their workspaces on EBS volumes that outlive the instance. When an agent starts a job it selects a workspace volume dynamically, attaches it, and builds against warm state; when the job ends the volume is detached and returned to the pool. Attach and detach are the two operations most likely to fail halfway, so the selection logic is self-healing: it reconciles what AWS says is attached against what the fleet believes, recovers from partial attachments, and sweeps orphaned volumes left behind by instances that died mid-build.</p>
-    <p>That single design choice is what let the fleet be disposable without making builds slow. Instances are cattle. Workspaces are not.</p>
+    <p>Everything is defined in Terraform: VPC and networking, security groups, IAM roles, the EC2 Jenkins controller, and the build agent fleet. The part worth explaining is what the agents do with their disks.</p>
+    <p>Unity agents keep their workspaces on EBS volumes that outlive the instance. When an agent starts a job it selects a workspace volume dynamically, attaches it, and builds against warm state. When the job ends the volume is detached and returned to the pool. Attach and detach are the two operations most likely to fail halfway, so the selection logic is self-healing: it reconciles what AWS says is attached against what the fleet believes, recovers from partial attachments, and sweeps orphaned volumes left behind by instances that died mid-build.</p>
+    <p>That is what lets the fleet stay disposable without making builds slow. Instances can be replaced at any time. The workspaces they mount are kept.</p>
 
     <figure>
       <svg viewBox="0 0 960 540" role="img" aria-labelledby="diagram-title diagram-desc">
@@ -62,7 +62,7 @@
           </marker>
         </defs>
 
-        <text class="dg-s" x="190" y="36">AWS VPC — PROVISIONED WITH TERRAFORM</text>
+        <text class="dg-s" x="190" y="36">AWS VPC · PROVISIONED WITH TERRAFORM</text>
         <rect class="dg-zone" x="190" y="48" width="610" height="248" rx="6"/>
 
         <rect class="dg-box" x="14" y="118" width="140" height="56" rx="4"/>
@@ -105,7 +105,7 @@
         <text class="dg-t" x="728" y="242" text-anchor="middle">EBS</text>
         <text class="dg-s" x="728" y="260" text-anchor="middle">WORKSPACE</text>
 
-        <text class="dg-s" x="728" y="322" text-anchor="middle">PERSISTENT — SELF-HEALING</text>
+        <text class="dg-s" x="728" y="322" text-anchor="middle">PERSISTENT · SELF-HEALING</text>
         <text class="dg-s" x="728" y="340" text-anchor="middle">ATTACH / DETACH</text>
 
         <path class="dg-line" d="M547,272 V392" marker-end="url(#ar)"/>
@@ -134,23 +134,23 @@
         <text class="dg-t" x="184" y="424" text-anchor="middle">Ops dashboard</text>
         <text class="dg-s" x="184" y="443" text-anchor="middle">NODE.JS + AWS LAMBDA</text>
       </svg>
-      <figcaption>The platform as it stands: Terraform-defined VPC, controller and agent fleet, with workspace state living on EBS volumes that outlive the instances that mount them.</figcaption>
+      <figcaption>The platform as it stands: a Terraform-defined VPC, controller and agent fleet, with workspace state on EBS volumes that outlive the instances mounting them.</figcaption>
     </figure>
 
     <h2>Pipelines on top</h2>
-    <p>On that foundation sits the Jenkins estate I own end to end: multi-platform Unity build pipelines across Android, iOS and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and what gets cleaned up.</p>
-    <p>Two pieces mattered more than their size suggests. The first is log parsing with prioritised error extraction — a Unity build log is tens of thousands of lines and the one line that matters is rarely near the end, so the pipeline surfaces the actual failure instead of the last stack trace. The second is artifact upload, which started life as a shell script, became Python, and ended as parallel Jenkins stages with tuned concurrency. Uploads had been failing intermittently under load for long enough that people had learned to just retry; after the rewrite that class of failure stopped appearing.</p>
+    <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines across Android, iOS and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and what gets cleaned up.</p>
+    <p>Two pieces mattered more than their size suggests. The first is log parsing with prioritised error extraction. A Unity build log is tens of thousands of lines and the line that matters is rarely near the end, so the pipeline surfaces the actual failure instead of the last stack trace. The second is artifact upload, which started as a shell script, became Python, and ended as parallel Jenkins stages with tuned concurrency. Uploads had been failing intermittently under load for long enough that people had learned to just retry. After the rewrite that failure stopped happening.</p>
 
     <h2>Migrating without stopping</h2>
-    <p>Two migrations ran on this platform. The first moved Jenkins itself off Azure onto a unified codebase covering both the AWS fleet and the remaining bare-metal machines — one set of pipeline definitions instead of two dialects that had drifted apart. The second moved the game's build and release pipelines from Azure to a Metaplay backend, which meant a PlayFab CloudScript bypass and a set of reliability fixes to the Azure Storage Queue handling that had to keep working right up until the day it did not need to.</p>
-    <p>Neither migration got a freeze. The approach was the boring one: make the new path work in parallel, move one pipeline at a time, keep the old path reversible until the new one had run enough real builds to be trusted, and delete only afterwards. The team kept shipping through both cutovers. I wrote the post-cutover operational guide the team still runs on — for a platform one person built, documentation is the difference between infrastructure and a hostage situation.</p>
+    <p>Two migrations ran on this platform. The first moved CI onto the new AWS environment, on a unified pipeline codebase covering both the AWS fleet and the machines that stayed bare metal, so there was one set of pipeline definitions instead of two dialects that had drifted apart. The second moved the game's build and release pipelines from Azure to a Metaplay backend, which meant a PlayFab CloudScript bypass and reliability fixes to the Azure Storage Queue handling that had to keep working right up to the cutover.</p>
+    <p>Neither migration got a freeze. The approach was the boring one: make the new path work in parallel, move one pipeline at a time, keep the old path reversible until the new one had run enough real builds to be trusted, and delete only afterwards. The team kept shipping through both cutovers. I also wrote the post-cutover operational guide the team still runs on, so the platform does not depend on me being around.</p>
 
     <h2>Then, the cost</h2>
-    <p>A build fleet that scales is a fleet that spends. Nobody could answer what a single build cost, which meant nobody could argue about whether it was worth it.</p>
-    <p>That started as a one-shot script and grew deliberately: script, then a daily report the team actually read, then a live panel in an internal ops dashboard I built on Node.js and AWS Lambda — at which point the original script was retired rather than left to rot. The dashboard also carries AWS Cost Explorer panels and a self-service request flow that files a Jira ticket and posts a Discord notification, so infrastructure requests stop arriving as direct messages that get lost.</p>
+    <p>Nobody could say what a single build cost, so nobody could argue about whether it was worth it.</p>
+    <p>It started as a one-shot script, then became a daily table the team actually read, then a live panel in an internal ops dashboard I built on Node.js and AWS Lambda. The original script was retired once the panel replaced it. The dashboard also carries AWS Cost Explorer panels and a self-service request flow that files a Jira ticket and posts a Discord notification, so infrastructure requests stop arriving as direct messages that get lost.</p>
 
     <h2>What it added up to</h2>
-    <p>Over 2,000 submitted changes in 18 months, across build infrastructure, pipelines and backend migration. The throughline is the part I would repeat: build the new thing properly, migrate the old thing onto it without asking anyone to stop, then instrument it so the next person arguing about the platform argues with numbers.</p>
+    <p>Over 2,000 submitted changes in 18 months, across build infrastructure, pipelines and backend migration. The platform is in Terraform, the pipelines are in one codebase, and what a build costs is on a dashboard anyone on the team can open.</p>
 
     <ul class="stack">
       <li>Terraform</li>
@@ -176,7 +176,7 @@
       <li><a href="gameplay.html">Gameplay</a></li>
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
     </ul>
-    <p class="colophon">Dankann Weissmüller — Porto Alegre, Brazil</p>
+    <p class="colophon">Dankann Weissmüller · Porto Alegre, Brazil</p>
   </div>
 </footer>
 
