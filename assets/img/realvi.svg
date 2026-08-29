@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200" role="img" aria-label="Realvi art tile">
+  <defs>
+    <linearGradient id="rv-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090b1a"/>
+      <stop offset="0.55" stop-color="#151233"/>
+      <stop offset="1" stop-color="#2b1a48"/>
+    </linearGradient>
+    <radialGradient id="rv-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#7d5cff" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#7d5cff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rv-shell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f2a63"/>
+      <stop offset="1" stop-color="#15112e"/>
+    </linearGradient>
+    <linearGradient id="rv-visor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a7e8ff" stop-opacity="0.52"/>
+      <stop offset="0.6" stop-color="#8b6cff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#8b6cff" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="rv-bubble" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b6a4ff" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#b6a4ff" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="200" fill="url(#rv-bg)"/>
+  <ellipse cx="292" cy="104" rx="272" ry="152" fill="url(#rv-glow)"/>
+
+  <g fill="none" stroke="#c8bcff" stroke-opacity="0.07">
+    <circle cx="292" cy="100" r="86"/>
+    <circle cx="292" cy="100" r="126"/>
+    <circle cx="292" cy="100" r="168"/>
+  </g>
+
+  <g transform="translate(204 58)">
+    <rect x="-36" y="24" width="248" height="26" rx="13" fill="#1d1840" fill-opacity="0.85"/>
+    <path d="M28 0 H148 A28 28 0 0 1 176 28 V54 A28 28 0 0 1 148 82 H112 C104 82 100 66 88 66 C76 66 72 82 64 82 H28 A28 28 0 0 1 0 54 V28 A28 28 0 0 1 28 0 Z" fill="url(#rv-shell)" stroke="#8f7cf0" stroke-opacity="0.35"/>
+    <path d="M22 14 H154 A14 14 0 0 1 168 28 V44 A14 14 0 0 1 154 58 H118 C110 58 106 50 88 50 C70 50 66 58 58 58 H22 A14 14 0 0 1 8 44 V28 A14 14 0 0 1 22 14 Z" fill="url(#rv-visor)"/>
+    <circle cx="47" cy="34" r="7" fill="#d8f2ff" fill-opacity="0.5"/>
+    <circle cx="129" cy="34" r="7" fill="#d8f2ff" fill-opacity="0.5"/>
+  </g>
+
+  <g stroke="#cfc4ff" stroke-opacity="0.22" stroke-width="1">
+    <path d="M436 44 H556 A14 14 0 0 1 570 58 V88 A14 14 0 0 1 556 102 H478 L462 118 V102 H436 A14 14 0 0 1 422 88 V58 A14 14 0 0 1 436 44 Z" fill="url(#rv-bubble)"/>
+    <path d="M472 128 H556 A12 12 0 0 1 568 140 V160 A12 12 0 0 1 556 172 H500 L486 186 V172 H472 A12 12 0 0 1 460 160 V140 A12 12 0 0 1 472 128 Z" fill="url(#rv-bubble)" stroke-opacity="0.14"/>
+    <path d="M62 32 H136 A12 12 0 0 1 148 44 V64 A12 12 0 0 1 136 76 H92 L78 90 V76 H62 A12 12 0 0 1 50 64 V44 A12 12 0 0 1 62 32 Z" fill="url(#rv-bubble)" stroke-opacity="0.12"/>
+  </g>
+
+  <g fill="#e6dcff">
+    <circle cx="464" cy="73" r="5" fill-opacity="0.62"/>
+    <circle cx="486" cy="73" r="5" fill-opacity="0.44"/>
+    <circle cx="508" cy="73" r="5" fill-opacity="0.26"/>
+    <circle cx="494" cy="150" r="4" fill-opacity="0.36"/>
+    <circle cx="512" cy="150" r="4" fill-opacity="0.24"/>
+    <circle cx="530" cy="150" r="4" fill-opacity="0.14"/>
+    <circle cx="82" cy="54" r="4" fill-opacity="0.34"/>
+    <circle cx="99" cy="54" r="4" fill-opacity="0.22"/>
+    <circle cx="116" cy="54" r="4" fill-opacity="0.12"/>
+  </g>
+
+  <g fill="#a9c8ff">
+    <circle cx="392" cy="152" r="2.5" fill-opacity="0.5"/>
+    <circle cx="418" cy="26" r="2" fill-opacity="0.4"/>
+    <circle cx="176" cy="164" r="2" fill-opacity="0.35"/>
+    <circle cx="596" cy="112" r="2.5" fill-opacity="0.3"/>
+  </g>
+</svg>
