@@ -323,21 +323,35 @@ h2 {
 
 .shipped li {
   display: grid;
-  gap: 0.15rem 1.5rem;
-  padding: 1rem 0;
+  gap: 0.25rem 1.5rem;
+  padding: 1.25rem 0;
   border-bottom: 1px solid var(--line);
   margin: 0;
 }
 
+.shipped .art {
+  width: 9rem;
+  height: 3.5rem;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
 @media (min-width: 44rem) {
   .shipped li {
-    grid-template-columns: 10rem 1fr 9rem;
-    align-items: baseline;
+    grid-template-columns: 9rem 11rem 1fr 9rem;
+    align-items: center;
   }
+  .shipped .art { grid-column: 1; }
+  .shipped .title { grid-column: 2; }
+  .shipped .what { grid-column: 3; }
+  .shipped .when { grid-column: 4; }
 }
 
 .shipped .title {
-  font-weight: 600;
+  font-weight: 650;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
 }
 
 .shipped .what {
