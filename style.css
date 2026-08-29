@@ -160,12 +160,6 @@ h2 {
   margin-bottom: 1.1rem;
 }
 
-.hero .role {
-  color: var(--text-muted);
-  max-width: 46ch;
-  margin-bottom: 1.6rem;
-}
-
 .meta {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -198,72 +192,124 @@ h2 {
   color: var(--accent);
 }
 
-/* Work cards --------------------------------------------------------- */
+/* Selected work rows -------------------------------------------------- */
 
-.cards {
+.case-rows {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
+  gap: 1.1rem;
 }
 
-@media (min-width: 44rem) {
-  .cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  padding: 1.4rem;
+.case-row {
+  display: grid;
+  gap: 1.4rem;
+  padding: 1.5rem;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: var(--shadow);
   text-decoration: none;
   transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
-.card:hover {
+.case-row:hover {
   border-color: var(--accent);
   color: inherit;
   transform: translateY(-2px);
 }
 
-.card-art {
-  align-self: flex-start;
-  width: 5.5rem;
-  height: 2.55rem;
-  object-fit: cover;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  margin: 0 0 0.85rem;
+.case-row-body {
+  min-width: 0;
 }
 
-.card .kicker {
+.case-row-media {
+  order: -1;
+}
+
+.case-row-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 2;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+/* One banner, three framings, so the Godforge rows read as a series
+   instead of the same picture printed three times. */
+.case-row:nth-child(1) .case-row-art {
+  object-position: 0% 50%;
+}
+
+.case-row:nth-child(3) .case-row-art {
+  object-position: 100% 50%;
+}
+
+.case-row-credit {
+  display: block;
+  margin-top: 0.55rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.case-row .kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.7rem;
 }
 
-.card h3 {
-  font-size: 1.05rem;
-  margin-bottom: 0.6rem;
+.case-row h3 {
+  font-size: clamp(1.25rem, 1rem + 1.2vw, 1.8rem);
+  margin-bottom: 0.7rem;
 }
 
-.card p {
-  font-size: 0.9rem;
+.case-row p {
+  max-width: 34rem;
   color: var(--text-muted);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.05rem;
 }
 
-.card .more {
-  margin-top: auto;
-  font-size: 0.82rem;
+.case-row .more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
   color: var(--accent);
+}
+
+.case-row .more::after {
+  content: "\2192";
+  transition: transform 0.15s ease;
+}
+
+.case-row:hover .more::after {
+  transform: translateX(3px);
+}
+
+@media (min-width: 44rem) {
+  .case-rows {
+    gap: 1.35rem;
+  }
+
+  .case-row {
+    grid-template-columns: 1fr 21rem;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 2.1rem 2.25rem;
+  }
+
+  .case-row-media {
+    order: 0;
+  }
 }
 
 /* Shipped strip ------------------------------------------------------ */
@@ -285,23 +331,13 @@ h2 {
 
 @media (min-width: 44rem) {
   .shipped li {
-    grid-template-columns: 12rem 1fr 9rem;
+    grid-template-columns: 10rem 1fr 9rem;
     align-items: baseline;
   }
 }
 
 .shipped .title {
   font-weight: 600;
-}
-
-.shipped .art {
-  width: 4.5rem;
-  height: 2.125rem;
-  object-fit: cover;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  margin-right: 0.7rem;
-  vertical-align: middle;
 }
 
 .shipped .what {

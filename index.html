@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dankann Weissmüller · Senior Game Engineer</title>
-<meta name="description" content="Senior game engineer, ten years in games. Unity and C# gameplay and editor tooling, plus the Jenkins, Terraform and AWS build infrastructure that ships live titles.">
+<title>Dankann Weissmüller · DevOps and Game Engineer</title>
+<meta name="description" content="DevOps and game engineer, ten years in games. Unity and C# gameplay and editor tooling, plus the Jenkins, Terraform and AWS build infrastructure that ships live titles.">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Dankann Weissmüller · Senior Game Engineer">
-<meta property="og:description" content="I build games and the pipelines that ship them. Unity, C#, Jenkins, Terraform, AWS.">
+<meta property="og:title" content="Dankann Weissmüller · DevOps and Game Engineer">
+<meta property="og:description" content="DevOps and game engineer. Unity, C#, Jenkins, Terraform, AWS.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230e1014'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23e0a458'%3EDW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +20,7 @@
 <header class="hero">
   <div class="wrap">
     <h1>Dankann Weissmüller</h1>
-    <p class="tagline">I build games and the pipelines that ship them.</p>
-    <p class="role">DevOps and game engineer. Two infrastructure migrations with no interrupted releases, and build tooling used every day by a team of roughly fifty developers and QA.</p>
+    <p class="tagline">DevOps and game engineer.</p>
     <p class="meta">Porto Alegre, Brazil · Remote</p>
     <ul class="links">
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
@@ -39,7 +38,7 @@
     <div class="lede">
       <p>Ten years in games. I'm now <strong>DevOps Engineer at Ironbelly Studios on Godforge</strong>, a live free-to-play title, after joining the project as Senior Unity Engineer. I work on both sides of the release: the Unity code players run, and the infrastructure that turns a changelist into a build in their hands.</p>
       <p>Godforge's Jenkins ran on bare-metal machines. I built a new build environment from scratch on AWS with Terraform (VPC and networking, an EC2 Jenkins controller, an EBS-persisted agent fleet with self-healing volume attach and detach) and migrated CI onto it. Separately, I moved the game's build and release pipelines from Azure to a Metaplay backend. Neither migration stopped releases. After that I made build cost visible, taking cost tracking from a one-shot script to a live panel in an internal ops dashboard I built on Node.js and AWS Lambda.</p>
-      <p>Alongside that: multi-platform Unity pipelines that ship Android, iOS, Windows and macOS from one codebase, a ground-up rewrite of our in-editor build tool in UI Toolkit, automated Perforce merge-conflict resolution, and change detection so we only build what a change actually affects. A build with no cache takes up to four hours and a full cached build still takes over an hour, so skipping the Addressables build or the client build when nothing touched them gives real time back.</p>
+      <p>Alongside that: multi-platform Unity pipelines that ship Android, iOS, Windows and macOS from one codebase, a ground-up rewrite of our in-editor build tool in UI Toolkit, automated Perforce merge-conflict resolution, and change detection so we only build what a change actually affects. A build with no cache can take multiple hours and a full cached build still takes over an hour, so skipping the Addressables build or the client build when nothing touched them gives real time back. Roughly fifty developers and QA use these tools every day.</p>
       <p>Before Godforge I shipped C++ gameplay systems on Fractured Veil, a multiplayer RPG on Steam, led an engineering team across concurrent Unity projects, and built realtime multiplayer for a VR/AR language-learning app on Mirror and AWS GameLift.</p>
     </div>
   </div>
@@ -48,35 +47,58 @@
 <section id="work">
   <div class="wrap">
     <p class="eyebrow">Selected work</p>
-    <div class="cards">
+    <div class="case-rows">
 
-      <a class="card" href="work/build-platform.html">
-        <p class="kicker">Infrastructure</p>
-        <h3>A build platform for a live F2P game</h3>
-        <p>New AWS and Terraform build infrastructure, two migrations that never stopped releases, then cost-per-build tracking on top.</p>
-        <span class="more">Read the case study</span>
+      <a class="case-row" href="work/build-platform.html">
+        <div class="case-row-body">
+          <p class="kicker">Infrastructure</p>
+          <h3>A build platform for a live F2P game</h3>
+          <p>New AWS and Terraform build infrastructure, two migrations that never stopped releases, then cost-per-build tracking on top.</p>
+          <span class="more">Read the case study</span>
+        </div>
+        <div class="case-row-media">
+          <img class="case-row-art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">
+          <span class="case-row-credit">Godforge</span>
+        </div>
       </a>
 
-      <a class="card" href="work/build-tooling.html">
-        <p class="kicker">Tooling</p>
-        <h3>Rewriting the build tool engineers actually use</h3>
-        <p>A UI Toolkit rewrite with presets that hold parity to the CI pipeline, a two-step flow that catches configuration errors before a build starts, and a local backend and Addressables server so a developer can build and test on their own machine.</p>
-        <span class="more">Read the case study</span>
+      <a class="case-row" href="work/build-tooling.html">
+        <div class="case-row-body">
+          <p class="kicker">Tooling</p>
+          <h3>Rewriting the build tool engineers actually use</h3>
+          <p>A UI Toolkit rewrite. Presets that hold parity to the CI pipeline, a two-step flow that catches configuration errors before a build starts, and a local backend and Addressables server so a developer can build and test on their own machine.</p>
+          <span class="more">Read the case study</span>
+        </div>
+        <div class="case-row-media">
+          <img class="case-row-art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">
+          <span class="case-row-credit">Godforge</span>
+        </div>
       </a>
 
-      <a class="card" href="work/devops-dashboard.html">
-        <p class="kicker">DevOps</p>
-        <h3>One place for everything DevOps</h3>
-        <p>An internal dashboard on Node.js and AWS Lambda: check out a build, see versions, environments and backend state, compare performance across devices, and ask the DevOps team for something without sending a chat message.</p>
-        <span class="more">Read the case study</span>
+      <a class="case-row" href="work/devops-dashboard.html">
+        <div class="case-row-body">
+          <p class="kicker">DevOps</p>
+          <h3>One place for everything DevOps</h3>
+          <p>An internal dashboard on Node.js and AWS Lambda: check out a build, see versions, environments and backend state, compare performance across devices, and ask the DevOps team for something without sending a chat message.</p>
+          <span class="more">Read the case study</span>
+        </div>
+        <div class="case-row-media">
+          <img class="case-row-art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">
+          <span class="case-row-credit">Godforge</span>
+        </div>
       </a>
 
-      <a class="card" href="work/gameplay.html">
-        <p class="kicker">Gameplay</p>
-        <img class="card-art" src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy">
-        <h3>Gameplay systems across engines</h3>
-        <p>Crafting, inventory, quests and weather in Unreal and C++. Realtime multiplayer in Unity on Mirror and GameLift. Ten years of shipping games.</p>
-        <span class="more">Read the case study</span>
+      <a class="case-row" href="work/gameplay.html">
+        <div class="case-row-body">
+          <p class="kicker">Gameplay</p>
+          <h3>Gameplay systems across engines</h3>
+          <p>Crafting, inventory, quests and weather in Unreal and C++. Realtime multiplayer in Unity on Mirror and GameLift. Ten years of shipping games.</p>
+          <span class="more">Read the case study</span>
+        </div>
+        <div class="case-row-media">
+          <img class="case-row-art" src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy">
+          <span class="case-row-credit">Fractured Veil</span>
+        </div>
       </a>
 
     </div>
@@ -88,12 +110,12 @@
     <p class="eyebrow">Shipped</p>
     <ul class="shipped">
       <li>
-        <span class="title"><img class="art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">Godforge</span>
+        <span class="title">Godforge</span>
         <span class="what">Live free-to-play title. Unity and C#, plus ownership of build, release and cloud infrastructure. <a href="https://godforge.gg/" rel="noopener">Play it at godforge.gg</a></span>
         <span class="when">2024 to present</span>
       </li>
       <li>
-        <span class="title"><img class="art" src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy">Fractured Veil</span>
+        <span class="title">Fractured Veil</span>
         <span class="what">Multiplayer RPG on Steam. Gameplay systems, audio and UI in C++ and Unreal Engine. <a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">View on Steam</a></span>
         <span class="when">2023 to 2024</span>
       </li>

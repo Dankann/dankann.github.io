@@ -42,7 +42,7 @@
 
     <h2>Fractured Veil: Unreal and C++</h2>
     <p>Fractured Veil is a multiplayer RPG shipped on Steam. I worked on it as Senior Unreal Engineer, and the systems I owned were the ones players spend their time inside: crafting, inventory, quests and weather. <a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">View it on Steam</a>.</p>
-    <p>Those four are more entangled than they look. Crafting and inventory share item identity and have to agree about it across the network. Quests observe both without polling them. Weather is world state that every other system reads and none should write. Most of the work was drawing those boundaries clearly enough that designers could add content without an engineer in the loop.</p>
+    <p>Those four are more entangled than they look. Crafting and inventory share item identity, and in a multiplayer game they have to agree about it across the network, so item identity needed one owner rather than a definition on each side. Quests observe both, and observe rather than poll, so adding a quest does not add load to the systems it watches. Weather is world state that many systems read and only one should write. Most of the work was drawing those boundaries clearly enough that adding an item, a recipe or a quest became content work, which let designers extend the game without an engineer in the loop for every addition.</p>
     <p>I also built the title's audio systems and its UI and widget layer, and developed internal Unreal plugins and frameworks that were reused across the project.</p>
 
     <figure class="video">
@@ -53,15 +53,15 @@
     </figure>
 
     <h2>Realvi: Unity, Mirror, AWS GameLift</h2>
-    <p>Before that I built realtime multiplayer for a VR/AR language-learning app: Mirror for netcode, AWS GameLift for session hosting and matchmaking. That is where my cloud work starts, years before Terraform and Jenkins. GameLift fleet configuration and session lifecycle is infrastructure work whether or not it gets called that.</p>
-    <p>On the product side I implemented the scene management systems and an NPC conversation state machine driving the app's dialogue flows. The learner can say the wrong thing, say nothing, or walk away, and each of those has to be a valid transition instead of a bug. I also integrated the AR and VR frameworks and contributed to the studio's programming guidelines.</p>
+    <p>Before that I built realtime multiplayer for a VR/AR language-learning app. Mirror for netcode, AWS GameLift for session hosting, matchmaking and fleet configuration.</p>
+    <p>On the product side I implemented the scene management systems and an NPC conversation state machine driving the app's dialogue flows. A learner can say the wrong thing, say nothing, or walk away mid-sentence, so the model had to treat each of those as a valid transition rather than an error state. Writing it as an explicit state machine kept new dialogue flows a matter of describing states rather than adding special cases to the code that runs them. I also integrated the AR and VR frameworks and contributed to the studio's programming guidelines.</p>
 
     <h2>Leading, and the years before</h2>
     <p>As Lead Unity Engineer I ran the engineering team across several concurrent web and mobile projects and owned code review and code quality standards. On a team shipping in parallel, that mostly means deciding what is worth blocking a merge over and being consistent about it.</p>
     <p>Earlier I shipped multi-platform titles in PlayCanvas WebGL and Unity across full project lifecycles, from prototyping through release, and started out doing gameplay programming on an Unreal Engine indie title in 2016.</p>
 
     <h2>What transfers between engines</h2>
-    <p>The APIs do not transfer. The problems do: ownership of state, what is authoritative and what is only a view of it, and where to put the boundary so content can be added without code. Deciding that early is much cheaper than deciding it once a system has five callers.</p>
+    <p>The APIs do not transfer. The problems do. Which system owns a piece of state and which ones only hold a view of it. What is authoritative when two of them disagree. Where the boundary sits between code and content, so a designer can add an item, a quest or a weather state without an engineer editing code for it. Those are the decisions that shape everything built afterwards, and they are cheapest to make before other systems have taken a dependency on the answer. Making them deliberately, and early, is the difference between a system that absorbs new content and one that has to be renegotiated every time the game grows.</p>
     <p>Working across Unreal, Unity and PlayCanvas is also how I ended up doing build and infrastructure work.</p>
 
     <ul class="stack">

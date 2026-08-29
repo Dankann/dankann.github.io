@@ -40,19 +40,21 @@
 <main class="case">
   <div class="wrap">
 
-    <h2>The tool nobody wanted to touch</h2>
-    <p>The original build window was an IMGUI script that had accumulated years of features. It worked, in the sense that people used it daily and had memorised its quirks. The cost was in the structure: build configuration lived in the UI code, so there was no way to say "build the same thing CI builds," and no way to change the tool without risking every workflow that depended on it.</p>
-    <p>The most common failure was ordinary. An engineer picks options, hits build, walks away, and comes back twenty minutes later to a failure caused by a setting that was wrong before the first asset compiled. Across a team on a live title, that is a lot of hours spent waiting to be told something obvious.</p>
+    <h2>The tool everybody depended on</h2>
+    <p>The original build window was an IMGUI script that had gained features year after year as the project needed them, and the team used it every day. What it could not do was hold configuration separately from presentation. Build settings lived inside the UI code, so there was no way to say "build the same thing CI builds", and no way to change the window without putting every workflow that depended on it at risk.</p>
+    <p>The everyday cost was waiting. An engineer picks options, starts a build, walks away, and comes back twenty minutes later to a failure caused by a setting that was already wrong before the first asset compiled. Across a team on a live title, that is a lot of hours spent waiting to be told something that was knowable at the start.</p>
 
     <h2>Separating the tool from its window</h2>
-    <p>The rewrite moved to UI Toolkit and to a controller architecture: build configuration, validation and execution logic live outside the window, and the window renders them. Build logic became testable and callable without an editor window open, and the UI could be changed without breaking someone's workflow.</p>
-    <p>IMGUI's immediate-mode model encourages mixing state into draw code, which is the coupling the old tool suffered from. Fighting that on every future change would have cost more than the rewrite did.</p>
+    <p>The rewrite moved to UI Toolkit and to a controller architecture. Build configuration, validation and execution live outside the window, and the window only renders them. That boundary is what made build logic testable, callable with no editor window open, and safe to change, because the interface can move without touching the definition of a build.</p>
+    <p>Immediate-mode UI invites state to live inside draw code, and every future change to the tool would have paid that coupling again. The rewrite paid it once.</p>
 
-    <h2>Presets, and parity with CI</h2>
-    <p>Build configuration became named, reusable presets, and the presets map exactly onto the Jenkins pipeline's own parameters. "It builds locally but fails in CI" is almost always a configuration difference, so sharing the schema makes that difference impossible to express. An engineer reproducing a CI failure picks the preset CI used instead of reconstructing it from memory and a pipeline page.</p>
+    <h2>Presets, and one configuration everyone shares</h2>
+    <p>Godforge runs many backend environments, each with its own configs and settings. A developer building locally had no visibility into which of those settings their build was picking up, and no easy way to change them. Two people testing the same feature could be running against different configurations without either of them knowing, and their testing would disagree.</p>
+    <p>Build configuration became named, reusable presets, which makes the environment an explicit, shared choice on screen instead of an assumption inherited from whatever the machine happened to hold. The presets map onto the Jenkins pipeline's own parameters, so a local build and a CI build are described by one schema rather than two descriptions kept in step by hand.</p>
+    <p>Everybody tests against the same known configuration, and can say which one it was. "It builds locally but fails in CI" is usually a configuration difference, and a shared schema leaves nowhere for that difference to hide. Reproducing a CI failure is a matter of picking the preset CI used, instead of rebuilding it from memory and a pipeline page.</p>
 
     <h2>Two steps instead of one</h2>
-    <p>The build flow splits into PREPARE and BUILD. Prepare does validation and configuration resolution and nothing expensive. Build does the work. Anything knowably wrong up front (a missing platform setting, an unresolvable config, an inconsistent preset) surfaces in seconds, while the engineer is still looking at the screen. Failures show up at the start of a short wait instead of the end of a long one.</p>
+    <p>The build flow splits into PREPARE and BUILD. Prepare does validation and configuration resolution and nothing expensive. Build does the work. Anything knowably wrong up front, a missing platform setting, an unresolvable config, an inconsistent preset, surfaces in seconds while the engineer is still looking at the screen. Failures arrive at the start of a short wait instead of the end of a long one, which turns most bad builds from a lost morning into a correction and a retry.</p>
 
     <figure>
       <svg viewBox="0 0 960 340" role="img" aria-labelledby="flow-title flow-desc">
@@ -101,17 +103,17 @@
     </figure>
 
     <h2>Running everything locally</h2>
-    <p>The window also runs the whole thing on the developer's machine. It can start a local game backend and a local Addressables server, so an engineer can build and test end to end without touching the shared dev environment that QA tests against every day. Before that, trying something out meant putting it on the shared environment and risking everyone else's day.</p>
-    <p>Addressables state is a common source of "it works on my machine" on a Unity project of this size, and it used to be managed by folklore and manual folder deletion. The window exposes the Addressables build cache directly: what is in it, and how to clear it.</p>
+    <p>Trying something out used to mean putting it on the shared dev environment, the same one QA tests against every day, so an experiment by one engineer could cost several other people an afternoon. The window can start a local game backend and a local Addressables server, so a developer builds and tests the full stack on their own machine and the shared environment stays a place for work that is meant to be seen.</p>
+    <p>Addressables state is a common source of "it works on my machine" on a Unity project of this size. No tooling existed for it, so the practical fix was deleting the right folder, which meant knowing which one. The window shows the Addressables build cache directly, what is in it and how to clear it, so a developer can resolve their own stale-content problem in seconds without needing that knowledge in the first place.</p>
 
     <h2>Around the tool: merge conflicts</h2>
-    <p>On a Perforce project with a large team, merge conflicts were constant manual work that landed on whoever noticed them first.</p>
-    <p>I built automated merge-conflict resolution and delivered it in 16 days: automatic checkout, automatic resolve where the resolution is unambiguous, per-user resolution changelists so the remaining decisions land with the person who owns them, and summary reports so nothing resolves silently. It only automates the unambiguous cases. Everything else goes to a human with the context to decide, instead of the bot guessing wrong in someone's stream.</p>
+    <p>On a Perforce project with a large team, keeping streams merged was constant manual work, and it landed on whoever noticed it first rather than on whoever owned the change.</p>
+    <p>I built automated merge-conflict resolution and delivered it in 16 days: automatic checkout, automatic resolve where the resolution is unambiguous, per-user resolution changelists, and summary reports so nothing resolves silently. The design point is that automation only touches cases with one correct answer. Everything genuinely ambiguous is routed to the person who wrote the change, with the context to decide, rather than resolved by a guess inside somebody else's stream. The routine merges stopped being anybody's job, and the decisions that need judgement reach the one person able to make them.</p>
 
     <h2>Around the tool: not rebuilding what did not change</h2>
-    <p>A build with no cache takes up to four hours. Even a full cached build takes over an hour. Content changes were triggering those full rebuilds when nothing about them needed one.</p>
-    <p>I built incremental content-update detection that reconciles Unity's own build reports against source-control changes to decide what actually has to run. If a change does not touch Addressables content, the Addressables build is skipped. If it does not touch client code, the client build is skipped. An incremental build only pays for what the change affects, and that is usually a small fraction of the full run.</p>
-    <p>Guessing what a content change affects from file paths is a heuristic that eventually ships a broken build. The build report says what Unity actually included, so the pipeline skips work it can prove is unnecessary and runs the full build when it cannot.</p>
+    <p>A build with no cache can take multiple hours. Even a full cached build takes over an hour. Content changes were triggering those full rebuilds when nothing about them needed one.</p>
+    <p>I built incremental content-update detection that reconciles Unity's own build reports against source-control changes to decide what actually has to run. If a change does not touch Addressables content, the Addressables build is skipped. If it does not touch client code, the client build is skipped. An incremental build pays only for what the change affects, which is usually a small fraction of the full run.</p>
+    <p>Deciding that from file paths would be a heuristic, and a heuristic that is wrong once ships a broken build. Unity's build report is the authoritative record of what went into the last build, so the pipeline skips only work it can prove is unnecessary and falls back to the full build whenever it cannot. A content change no longer waits on work it could not have affected, and the cases where that is uncertain still get the full run.</p>
 
     <ul class="stack">
       <li>Unity</li>
