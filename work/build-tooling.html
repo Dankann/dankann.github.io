@@ -9,13 +9,16 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rewriting the build tool engineers actually use">
 <meta property="og:description" content="Unity UI Toolkit, a controller architecture, build presets that hold parity with the CI pipeline, a two-step flow that fails in seconds instead of twenty minutes, and a local backend and Addressables server.">
+<meta property="og:url" content="https://dankann.github.io/work/build-tooling.html">
+<meta property="og:image" content="https://dankann.github.io/assets/img/godforge.png">
+<link rel="canonical" href="https://dankann.github.io/work/build-tooling.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230e1014'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23e0a458'%3EDW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="../style.css?v=3">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap">
+<link rel="stylesheet" href="../style.css">
 </head>
-<body>
+<body class="motion-reveal">
 
 <div class="topbar">
   <div class="wrap"><a class="back" href="../index.html">&#8592; Dankann Weissmüller</a></div>
@@ -27,7 +30,7 @@
     <h1>Rewriting the build tool engineers actually use</h1>
     <p class="standfirst">The Advanced Build Window is how a team of roughly fifty developers and QA on Godforge configures and starts a build without going near Jenkins. I rewrote it from the ground up in Unity's UI Toolkit, on a controller architecture, with presets that hold exact parity to the CI pipeline and a mode that runs the whole game locally.</p>
     <dl class="facts">
-      <div><dt>Role</dt><dd>DevOps Engineer</dd></div>
+      <div><dt>Role</dt><dd>Senior Software Engineer</dd></div>
       <div><dt>Where</dt><dd>Ironbelly Studios, on Godforge</dd></div>
       <div><dt>Dates</dt><dd>2024 to present</dd></div>
       <div><dt>Stack</dt><dd>Unity, C#, UI Toolkit</dd></div>
@@ -108,12 +111,23 @@
 
     <h2>Around the tool: merge conflicts</h2>
     <p>On a Perforce project with a large team, keeping streams merged was constant manual work, and it landed on whoever noticed it first rather than on whoever owned the change.</p>
-    <p>I built automated merge-conflict resolution and delivered it in 16 days: automatic checkout, automatic resolve where the resolution is unambiguous, per-user resolution changelists, and summary reports so nothing resolves silently. The design point is that automation only touches cases with one correct answer. Everything genuinely ambiguous is routed to the person who wrote the change, with the context to decide, rather than resolved by a guess inside somebody else's stream. The routine merges stopped being anybody's job, and the decisions that need judgement reach the one person able to make them.</p>
+    <p>I built automated merge-conflict resolution and had it in production inside three weeks: automatic checkout, automatic resolve where the resolution is unambiguous, per-user resolution changelists, and summary reports so nothing resolves silently. The design point is that automation only touches cases with one correct answer. Everything genuinely ambiguous is routed to the person who wrote the change, with the context to decide, rather than resolved by a guess inside somebody else's stream. The routine merges stopped being anybody's job, and the decisions that need judgement reach the one person able to make them.</p>
 
     <h2>Around the tool: not rebuilding what did not change</h2>
     <p>A build with no cache can take multiple hours. Even a full cached build takes over an hour. Content changes were triggering those full rebuilds when nothing about them needed one.</p>
     <p>I built incremental content-update detection that reconciles Unity's own build reports against source-control changes to decide what actually has to run. If a change does not touch Addressables content, the Addressables build is skipped. If it does not touch client code, the client build is skipped. An incremental build pays only for what the change affects, which is usually a small fraction of the full run.</p>
     <p>Deciding that from file paths would be a heuristic, and a heuristic that is wrong once ships a broken build. Unity's build report is the authoritative record of what went into the last build, so the pipeline skips only work it can prove is unnecessary and falls back to the full build whenever it cannot. A content change no longer waits on work it could not have affected, and the cases where that is uncertain still get the full run.</p>
+
+    <details class="detail">
+      <summary>How the skip decision is made</summary>
+      <ul>
+        <li>Unity's build report is the authoritative record of what went into the last build, so it is the input to the decision rather than a guess read off file paths.</li>
+        <li>The pipeline reconciles that report against the changes in source control for the changelist being built.</li>
+        <li>If nothing in the change touches Addressables content, the Addressables build is skipped.</li>
+        <li>If nothing touches client code, the client build is skipped.</li>
+        <li>Anything the reconciliation cannot account for falls back to the full build, so the pipeline only skips work it can prove is unnecessary.</li>
+      </ul>
+    </details>
 
     <ul class="stack">
       <li>Unity</li>

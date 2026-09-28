@@ -3,30 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dankann Weissmüller · DevOps and Game Engineer</title>
-<meta name="description" content="DevOps and game engineer, ten years in games. Unity and C# gameplay and editor tooling, plus the Jenkins, Terraform and AWS build infrastructure that ships live titles.">
+<title>Dankann Weissmüller · Senior Software Engineer</title>
+<meta name="description" content="Senior software engineer, ten years in games. Unity and C# gameplay and editor tooling, plus the Jenkins, Terraform and AWS build infrastructure that ships live titles.">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0c0b0a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f0e8" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Dankann Weissmüller · DevOps and Game Engineer">
-<meta property="og:description" content="DevOps and game engineer. Unity, C#, Jenkins, Terraform, AWS.">
+<meta property="og:title" content="Dankann Weissmüller · Senior Software Engineer">
+<meta property="og:description" content="Senior software engineer in games. Unity, C#, Jenkins, Terraform, AWS.">
+<meta property="og:url" content="https://dankann.github.io/">
+<meta property="og:image" content="https://dankann.github.io/assets/img/godforge.png">
+<link rel="canonical" href="https://dankann.github.io/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230e1014'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23e0a458'%3EDW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Dankann Weissmüller",
+    "jobTitle": "Senior Software Engineer",
+    "url": "https://dankann.github.io/",
+    "image": "https://dankann.github.io/assets/img/godforge.png",
+    "sameAs": [
+      "https://www.linkedin.com/in/dankannweissmuller",
+      "https://github.com/Dankann"
+    ]
+  }
+}
+</script>
 </head>
-<body>
+<body class="motion-reveal">
 
-<header class="hero">
+<header class="masthead">
+  <div class="mast-art" aria-hidden="true"><img src="assets/img/godforge.png" alt="" width="640" height="200"></div>
+  <div class="mast-scrim" aria-hidden="true"></div>
   <div class="wrap">
     <h1>Dankann Weissmüller</h1>
-    <p class="tagline">DevOps and game engineer.</p>
-    <p class="meta">Porto Alegre, Brazil · Remote</p>
-    <ul class="links">
-      <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
-      <li><a href="https://www.linkedin.com/in/dankannweissmuller" rel="me noopener">LinkedIn</a></li>
-      <li><a href="https://github.com/Dankann" rel="me noopener">GitHub</a></li>
-    </ul>
+    <div class="mast-rule">
+      <p class="tagline">Senior Software Engineer.</p>
+      <div class="mast-side">
+        <p class="meta">Porto Alegre, Brazil · Remote · GMT-3</p>
+        <ul class="links">
+          <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
+          <li><a href="https://www.linkedin.com/in/dankannweissmuller" rel="me noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/Dankann" rel="me noopener">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -35,11 +63,12 @@
 <section id="about">
   <div class="wrap">
     <p class="eyebrow">About</p>
-    <div class="lede">
-      <p>Ten years in games. I'm now <strong>DevOps Engineer at Ironbelly Studios on Godforge</strong>, a live free-to-play title, after joining the project as Senior Unity Engineer. I work on both sides of the release: the Unity code players run, and the infrastructure that turns a changelist into a build in their hands.</p>
-      <p>Godforge's Jenkins ran on bare-metal machines. I built a new build environment from scratch on AWS with Terraform (VPC and networking, an EC2 Jenkins controller, an EBS-persisted agent fleet with self-healing volume attach and detach) and migrated CI onto it. Separately, I moved the game's build and release pipelines from Azure to a Metaplay backend. Neither migration stopped releases. After that I made build cost visible, taking cost tracking from a one-shot script to a live panel in an internal ops dashboard I built on Node.js and AWS Lambda.</p>
-      <p>Alongside that: multi-platform Unity pipelines that ship Android, iOS, Windows and macOS from one codebase, a ground-up rewrite of our in-editor build tool in UI Toolkit, automated Perforce merge-conflict resolution, and change detection so we only build what a change actually affects. A build with no cache can take multiple hours and a full cached build still takes over an hour, so skipping the Addressables build or the client build when nothing touched them gives real time back. Roughly fifty developers and QA use these tools every day.</p>
-      <p>Before Godforge I shipped C++ gameplay systems on Fractured Veil, a multiplayer RPG on Steam, led an engineering team across concurrent Unity projects, and built realtime multiplayer for a VR/AR language-learning app on Mirror and AWS GameLift.</p>
+    <div class="about-grid">
+      <p class="standfirst reveal">Ten years in games, the last five of them at <a href="https://www.ironbellystudios.com/" rel="noopener">Ironbelly Studios</a>. I'm a <strong>Senior Software Engineer on Godforge</strong>, a live free-to-play title. I joined it as a Unity engineer and now own its build, release and cloud infrastructure within a small DevOps team, working on both sides of the release: the code players run, and the infrastructure that turns a changelist into a build in their hands.</p>
+      <div class="rest reveal">
+        <p>Most of my work is build and release engineering: Jenkins pipelines, cloud infrastructure on AWS with Terraform, backend migrations, and multi-platform Unity builds that ship Android, iOS, Windows and macOS from one codebase. I also build the tooling around all of that, from in-editor build tools to an internal DevOps dashboard, for a team of roughly fifty developers and QA who use it every day. The details live in the case studies below: <a href="work/build-platform.html">the build platform</a>, <a href="work/build-tooling.html">the build tool rewrite</a> and <a href="work/devops-dashboard.html">the dashboard</a>.</p>
+        <p>I still write game code too. Before Godforge I shipped C++ gameplay systems on Fractured Veil, a multiplayer RPG on Steam, led an engineering team at Ironbelly across concurrent Unity projects, and built realtime multiplayer for Realvi, a VR/AR language-learning app. That side of things is in <a href="work/gameplay.html">the gameplay case study</a>.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -47,37 +76,21 @@
 <section id="shipped">
   <div class="wrap">
     <p class="eyebrow">Shipped</p>
-    <ul class="shipped">
-      <li>
-        <img class="art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">
-        <div class="shipped-body">
-          <span class="title">Godforge</span>
-          <span class="what">Live free-to-play title. Unity and C#, plus ownership of build, release and cloud infrastructure. <a href="https://godforge.gg/" rel="noopener">Play it at godforge.gg</a></span>
+    <ul class="plates">
+      <li class="plate reveal">
+        <div class="frame"><a href="https://godforge.gg/" rel="noopener"><img src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy"><video class="hover-vid" src="assets/vid/godforge.mp4" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video></a></div>
+        <div>
+          <span class="title"><a href="https://godforge.gg/" rel="noopener">Godforge</a></span>
           <span class="when">2024 to present</span>
+          <span class="what">Live free-to-play title. Unity and C#, plus ownership of build, release and cloud infrastructure: roughly fifty developers and QA build on it every day, across four platforms, through a CI migration onto AWS and a backend migration off Azure that never stopped a release. <a href="https://godforge.gg/" rel="noopener">Play it at godforge.gg</a></span>
         </div>
       </li>
-      <li>
-        <img class="art" src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy">
-        <div class="shipped-body">
-          <span class="title">Fractured Veil</span>
-          <span class="what">Multiplayer RPG on Steam. Gameplay systems, audio and UI in C++ and Unreal Engine. <a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">View on Steam</a></span>
+      <li class="plate reveal">
+        <div class="frame"><a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener"><img src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy"><video class="hover-vid" src="assets/vid/fractured-veil.mp4" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video></a></div>
+        <div>
+          <span class="title"><a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">Fractured Veil</a></span>
           <span class="when">2023 to 2024</span>
-        </div>
-      </li>
-      <li>
-        <img class="art" src="assets/img/realvi.svg" alt="Realvi art tile" width="640" height="200" loading="lazy">
-        <div class="shipped-body">
-          <span class="title">Realvi</span>
-          <span class="what">VR/AR language-learning app. Realtime multiplayer in Unity on Mirror networking and AWS GameLift.</span>
-          <span class="when">2019 to 2021</span>
-        </div>
-      </li>
-      <li>
-        <img class="art" src="assets/img/earlier-titles.svg" alt="Earlier titles art tile" width="640" height="200" loading="lazy">
-        <div class="shipped-body">
-          <span class="title">Earlier titles</span>
-          <span class="what">Multi-platform releases in PlayCanvas WebGL and Unity across full project lifecycles, and an Unreal Engine indie title.</span>
-          <span class="when">2016 to 2019</span>
+          <span class="what">Multiplayer RPG on Steam. Four gameplay systems in C++ and Unreal Engine, crafting, inventory, quests and weather, plus the title's audio and UI layer. <a href="https://store.steampowered.com/app/1128500/Fractured_Veil/" rel="noopener">View on Steam</a></span>
         </div>
       </li>
     </ul>
@@ -87,61 +100,92 @@
 <section id="work">
   <div class="wrap">
     <p class="eyebrow">Selected work</p>
-    <div class="case-rows">
-
-      <a class="case-row" href="work/build-platform.html">
-        <div class="case-row-body">
-          <p class="kicker">Infrastructure</p>
+    <ul class="index">
+      <li><a href="work/build-platform.html">
+        <div>
+          <p class="k">Infrastructure</p>
           <h3>A build platform for a live F2P game</h3>
-          <p>New AWS and Terraform build infrastructure, two migrations that never stopped releases, then cost-per-build tracking on top.</p>
+        </div>
+        <div class="col2">
+          <p>New AWS and Terraform build infrastructure, a CI migration off bare metal and a backend migration off Azure that never stopped releases, then cost-per-build tracking on top.</p>
           <span class="more">Read the case study</span>
         </div>
-        <div class="case-row-media">
-          <img class="case-row-art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">
-          <span class="case-row-credit">Godforge</span>
-        </div>
-      </a>
-
-      <a class="case-row" href="work/build-tooling.html">
-        <div class="case-row-body">
-          <p class="kicker">Tooling</p>
+        <svg class="fig" viewBox="0 0 160 110" aria-hidden="true" focusable="false">
+          <rect class="dg-box-accent" x="6" y="42" width="52" height="26" rx="3"/>
+          <path class="dg-line" d="M58,55 H84 V18 H112"/>
+          <path class="dg-line" d="M58,55 H112"/>
+          <path class="dg-line" d="M58,55 H84 V92 H112"/>
+          <rect class="dg-box" x="112" y="8" width="42" height="20" rx="3"/>
+          <rect class="dg-box" x="112" y="45" width="42" height="20" rx="3"/>
+          <rect class="dg-box" x="112" y="82" width="42" height="20" rx="3"/>
+        </svg>
+      </a></li>
+      <li><a href="work/build-tooling.html">
+        <div>
+          <p class="k">Tooling</p>
           <h3>Rewriting the build tool engineers actually use</h3>
+        </div>
+        <div class="col2">
           <p>A UI Toolkit rewrite. Presets that hold parity to the CI pipeline, a two-step flow that catches configuration errors before a build starts, and a local backend and Addressables server so a developer can build and test on their own machine.</p>
           <span class="more">Read the case study</span>
         </div>
-        <div class="case-row-media">
-          <img class="case-row-art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">
-          <span class="case-row-credit">Godforge</span>
-        </div>
-      </a>
-
-      <a class="case-row" href="work/devops-dashboard.html">
-        <div class="case-row-body">
-          <p class="kicker">DevOps</p>
+        <svg class="fig" viewBox="0 0 160 110" aria-hidden="true" focusable="false">
+          <defs>
+            <marker id="fig-ar-b" viewBox="0 0 9 9" refX="8" refY="4.5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+              <path class="dg-arrow" d="M0,0 L9,4.5 L0,9 z"/>
+            </marker>
+          </defs>
+          <rect class="dg-box" x="2" y="40" width="42" height="30" rx="3"/>
+          <path class="dg-line" d="M44,55 H57" marker-end="url(#fig-ar-b)"/>
+          <rect class="dg-box-accent" x="59" y="40" width="42" height="30" rx="3"/>
+          <path class="dg-line" d="M101,55 H114" marker-end="url(#fig-ar-b)"/>
+          <rect class="dg-box" x="116" y="40" width="42" height="30" rx="3"/>
+        </svg>
+      </a></li>
+      <li><a href="work/devops-dashboard.html">
+        <div>
+          <p class="k">DevOps</p>
           <h3>One place for everything DevOps</h3>
+        </div>
+        <div class="col2">
           <p>An internal dashboard on Node.js and AWS Lambda: check out a build, see versions, environments and backend state, compare performance across devices, and ask the DevOps team for something without sending a chat message.</p>
           <span class="more">Read the case study</span>
         </div>
-        <div class="case-row-media">
-          <img class="case-row-art" src="assets/img/godforge.png" alt="Godforge key art" width="640" height="200" loading="lazy">
-          <span class="case-row-credit">Godforge</span>
-        </div>
-      </a>
-
-      <a class="case-row" href="work/gameplay.html">
-        <div class="case-row-body">
-          <p class="kicker">Gameplay</p>
+        <svg class="fig" viewBox="0 0 160 110" aria-hidden="true" focusable="false">
+          <path class="dg-line" d="M69,48 L24,22"/>
+          <path class="dg-line" d="M91,48 L136,22"/>
+          <path class="dg-line" d="M69,62 L24,88"/>
+          <path class="dg-line" d="M91,62 L136,88"/>
+          <circle class="dg-box-accent" cx="80" cy="55" r="13"/>
+          <circle class="dg-box" cx="18" cy="18" r="7"/>
+          <circle class="dg-box" cx="142" cy="18" r="7"/>
+          <circle class="dg-box" cx="18" cy="92" r="7"/>
+          <circle class="dg-box" cx="142" cy="92" r="7"/>
+        </svg>
+      </a></li>
+      <li><a href="work/gameplay.html">
+        <div>
+          <p class="k">Gameplay</p>
           <h3>Gameplay systems across engines</h3>
+        </div>
+        <div class="col2">
           <p>Crafting, inventory, quests and weather in Unreal and C++. Realtime multiplayer in Unity on Mirror and GameLift. Ten years of shipping games.</p>
           <span class="more">Read the case study</span>
         </div>
-        <div class="case-row-media">
-          <img class="case-row-art" src="assets/img/fractured-veil.jpg" alt="Fractured Veil key art" width="460" height="215" loading="lazy">
-          <span class="case-row-credit">Fractured Veil</span>
-        </div>
-      </a>
-
-    </div>
+        <svg class="fig" viewBox="0 0 160 110" aria-hidden="true" focusable="false">
+          <defs>
+            <marker id="fig-ar-d" viewBox="0 0 9 9" refX="8" refY="4.5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+              <path class="dg-arrow" d="M0,0 L9,4.5 L0,9 z"/>
+            </marker>
+          </defs>
+          <rect class="dg-box-accent" x="2" y="39" width="54" height="30" rx="3"/>
+          <path class="dg-line" d="M56,54 H80 V26 H105" marker-end="url(#fig-ar-d)"/>
+          <path class="dg-line" d="M56,54 H80 V80 H105" marker-end="url(#fig-ar-d)"/>
+          <rect class="dg-box" x="106" y="14" width="52" height="24" rx="3"/>
+          <rect class="dg-box" x="106" y="68" width="52" height="24" rx="3"/>
+        </svg>
+      </a></li>
+    </ul>
   </div>
 </section>
 
@@ -149,23 +193,97 @@
   <div class="wrap">
     <p class="eyebrow">Skills</p>
     <dl class="skills">
-      <div>
+      <div class="reveal">
         <dt>Languages</dt>
-        <dd>C#, C++, Python, Groovy, JavaScript / Node.js, PowerShell, Shell</dd>
+        <dd>
+          <ul class="tags">
+            <li>C#</li>
+            <li>C++</li>
+            <li>Python</li>
+            <li>Groovy</li>
+            <li>JavaScript / Node.js</li>
+            <li>PowerShell</li>
+            <li>Shell</li>
+          </ul>
+        </dd>
       </div>
-      <div>
+      <div class="reveal">
         <dt>Engines &amp; game tech</dt>
-        <dd>Unity (UI Toolkit, Addressables, editor tooling), Unreal Engine, PlayCanvas (WebGL), Mirror networking, AWS GameLift, AR/VR</dd>
+        <dd>
+          <ul class="tags">
+            <li>Unity</li>
+            <li>UI Toolkit</li>
+            <li>Addressables</li>
+            <li>editor tooling</li>
+            <li>Unreal Engine</li>
+            <li>PlayCanvas</li>
+            <li>WebGL</li>
+            <li>Mirror networking</li>
+            <li>AWS GameLift</li>
+            <li>AR/VR</li>
+          </ul>
+        </dd>
       </div>
-      <div>
+      <div class="reveal">
         <dt>CI/CD &amp; infrastructure</dt>
-        <dd>Jenkins pipelines, Terraform, AWS (EC2, EBS, S3, Lambda, IAM, VPC, Cost Explorer), Azure, Docker, build automation, release engineering, multi-platform build pipelines, infrastructure migration, cost observability</dd>
+        <dd>
+          <ul class="tags">
+            <li>Jenkins pipelines</li>
+            <li>Terraform</li>
+            <li>AWS</li>
+            <li>EC2</li>
+            <li>EBS</li>
+            <li>S3</li>
+            <li>Lambda</li>
+            <li>IAM</li>
+            <li>VPC</li>
+            <li>Cost Explorer</li>
+            <li>Azure</li>
+            <li>Docker</li>
+            <li>build automation</li>
+            <li>release engineering</li>
+            <li>multi-platform build pipelines</li>
+            <li>infrastructure migration</li>
+            <li>cost observability</li>
+          </ul>
+        </dd>
       </div>
-      <div>
+      <div class="reveal">
         <dt>Tools &amp; platforms</dt>
-        <dd>Perforce / Helix, Git, Metaplay, PlayFab, Jira, Confluence, Discord APIs, Markdown-to-Confluence docs automation</dd>
+        <dd>
+          <ul class="tags">
+            <li>Perforce / Helix</li>
+            <li>Git</li>
+            <li>Metaplay</li>
+            <li>PlayFab</li>
+            <li>Jira</li>
+            <li>Confluence</li>
+            <li>Discord APIs</li>
+            <li>Markdown-to-Confluence docs automation</li>
+          </ul>
+        </dd>
       </div>
     </dl>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <div class="contact-grid">
+      <p class="invite reveal">If you are hiring for game programming or build and platform engineering in games, I would like to hear what you are working on.</p>
+      <div class="contact-side reveal">
+        <a class="cta" href="mailto:dankann.weissmuller@gmail.com">dankann.weissmuller@gmail.com</a>
+        <p class="status">
+          <span>Open to senior game programming, build and DevOps roles</span>
+          <span>Remote from Porto Alegre, Brazil · GMT-3</span>
+        </p>
+        <ul class="links">
+          <li><a href="https://www.linkedin.com/in/dankannweissmuller" rel="me noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/Dankann" rel="me noopener">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -173,14 +291,10 @@
 
 <footer>
   <div class="wrap">
-    <ul class="links">
-      <li><a href="mailto:dankann.weissmuller@gmail.com">dankann.weissmuller@gmail.com</a></li>
-      <li><a href="https://www.linkedin.com/in/dankannweissmuller" rel="me noopener">LinkedIn</a></li>
-      <li><a href="https://github.com/Dankann" rel="me noopener">GitHub</a></li>
-    </ul>
     <p class="colophon">Dankann Weissmüller · Porto Alegre, Brazil</p>
   </div>
 </footer>
 
+<script src="assets/js/hover-video.js" defer></script>
 </body>
 </html>

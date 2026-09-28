@@ -9,13 +9,16 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="A build platform for a live F2P game">
 <meta property="og:description" content="New AWS and Terraform build infrastructure, two migrations that never stopped releases, then cost-per-build tracking on top.">
+<meta property="og:url" content="https://dankann.github.io/work/build-platform.html">
+<meta property="og:image" content="https://dankann.github.io/assets/img/godforge.png">
+<link rel="canonical" href="https://dankann.github.io/work/build-platform.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230e1014'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23e0a458'%3EDW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="../style.css?v=3">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap">
+<link rel="stylesheet" href="../style.css">
 </head>
-<body>
+<body class="motion-reveal">
 
 <div class="topbar">
   <div class="wrap"><a class="back" href="../index.html">&#8592; Dankann Weissmüller</a></div>
@@ -27,7 +30,7 @@
     <h1>A build platform for a live F2P game</h1>
     <p class="standfirst"><a href="https://godforge.gg/" rel="noopener">Godforge</a> is a live free-to-play title at Ironbelly Studios. Over two years I built its build platform from scratch on AWS, ran two migrations without interrupting releases, and added cost tracking so the team can see what a build costs.</p>
     <dl class="facts">
-      <div><dt>Role</dt><dd>DevOps Engineer</dd></div>
+      <div><dt>Role</dt><dd>Senior Software Engineer</dd></div>
       <div><dt>Where</dt><dd>Ironbelly Studios, on Godforge</dd></div>
       <div><dt>Dates</dt><dd>2024 to present</dd></div>
       <div><dt>Stack</dt><dd>Jenkins, Terraform, AWS</dd></div>
@@ -56,6 +59,17 @@
     <p>Everything is defined in Terraform: VPC and networking, security groups, IAM roles, the EC2 Jenkins controller, and the build agent fleet. One description of the platform lives in source control, and applying it is how the platform changes.</p>
     <p>Unity agents keep their workspaces on EBS volumes that outlive the instance. When an agent starts a job it selects a workspace volume dynamically, attaches it, and builds against warm state. When the job ends the volume is detached and returned to the pool. Attach and detach are the two operations most likely to fail halfway, so the selection logic is self-healing: it reconciles what AWS says is attached against what the fleet believes, recovers from partial attachments, and sweeps orphaned volumes left behind by instances that died mid-build.</p>
     <p>The fleet stays disposable without making builds slow. An instance can be replaced at any time, and the workspace it was building in is kept, so recovering from a dead agent costs a retry instead of a cold build.</p>
+    <details class="detail">
+      <summary>The volume lifecycle in detail</summary>
+      <ul>
+        <li>An agent picking up a job selects a free workspace volume from the pool, attaches it, and builds against whatever state the previous job on that volume left behind.</li>
+        <li>Attach and detach are the two steps most likely to fail halfway, so the fleet never trusts its own record of what is mounted. It reconciles against what AWS reports before it acts.</li>
+        <li>A partial attachment is recovered in place rather than abandoned, so a half-attached volume does not cost the job a cold build.</li>
+        <li>Volumes orphaned by instances that died mid-build are swept and returned to the pool, so a dead agent does not quietly remove capacity from the fleet.</li>
+        <li>Because the workspace outlives the instance, replacing an agent costs a retry instead of a build from cold. That is what makes a spot fleet usable for Unity builds at all.</li>
+      </ul>
+    </details>
+
     <p>Capacity stopped being a purchasing decision. Agents run as spot instances in a scaling group, so when the team needs more builds running at once, the group brings up another instance. Bare metal handles a fixed number of builds at a time, and that number only moves when someone buys a machine. Storage works the same way. If the project grows in asset size, the volumes grow with a Terraform change, where on bare metal it means requesting a new machine or physically installing SSDs. Growth in team size or asset size is now a change to a file rather than a lead time.</p>
 
     <figure>
@@ -149,12 +163,12 @@
     </figure>
 
     <h2>Pipelines on top</h2>
-    <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines covering Android, iOS, Windows and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and what gets cleaned up. Four platforms come out of one pipeline codebase, not four that drifted apart.</p>
+    <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines covering Android, iOS, Windows and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and which old builds and workspaces get cleaned up. Four platforms come out of one pipeline codebase, not four that drifted apart.</p>
     <p>A Unity build log runs to tens of thousands of lines, and the line that explains the failure is rarely near the end, so reading one was a skill the team did not have a reason to acquire. The pipelines parse the log and extract the errors that caused the failure, in priority order, onto the build page. A developer sees why their build broke without opening a log or asking DevOps to read it for them.</p>
     <p>Artifact uploads were the other daily cost. They failed intermittently under load often enough that people had learned to just retry, which put a manual step in front of every release that hit a bad moment. Rebuilding the upload path stopped that failure. Uploads run to completion on their own, and nobody watches them any more.</p>
 
     <h2>Migrating without stopping</h2>
-    <p>Two migrations ran on this platform. The first moved CI onto the new AWS environment. Rather than run a second set of pipelines for the new fleet, I unified the pipeline codebase so the same definitions cover both the AWS agents and the machines that stayed bare metal. One codebase means a fix lands once for every platform instead of being copied into a second set and slowly falling out of step. The second migration moved the game's build and release pipelines from Azure to a Metaplay backend, which meant a PlayFab CloudScript bypass and reliability fixes to the Azure Storage Queue handling, since the old path had to keep working right up to the cutover.</p>
+    <p>Two migrations ran on this platform. The first moved CI onto the new AWS environment. Rather than run a second set of pipelines for the new fleet, I unified the pipeline codebase so the same definitions cover both the AWS agents and the machines that stayed bare metal. One codebase means a fix lands once for every platform instead of being copied into a second set and slowly falling out of step. The second migration moved the game's build and release pipelines from Azure to Metaplay, a managed game backend platform. The old path had to keep working right up to the cutover, so this also meant bypassing the PlayFab CloudScript layer the legacy backend ran on and hardening its Azure Storage Queue handling.</p>
     <p>Neither migration got a freeze, so both were designed to stay reversible. The new path ran in parallel with the old one, pipelines moved across one at a time, and nothing was deleted until the replacement had run enough real builds to be trusted. Every step could be undone on the day it was taken, which is what let the work happen underneath a team that kept building all day. The team shipped through both cutovers without losing a release. I also wrote the post-cutover operational guide the team still runs on, so day-to-day operation of the platform does not depend on me.</p>
 
     <h2>Then, the cost</h2>

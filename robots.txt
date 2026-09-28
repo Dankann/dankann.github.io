@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dankann.github.io/sitemap.xml
