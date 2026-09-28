@@ -291,7 +291,7 @@ section + section {
 }
 
 .rest {
-  color: var(--muted);
+  color: var(--text-body);
   max-width: var(--prose);
 }
 
