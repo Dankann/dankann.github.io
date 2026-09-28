@@ -164,15 +164,13 @@
     <h2>Pipelines on top</h2>
     <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines covering Android, iOS, Windows and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and which old builds and workspaces get cleaned up. Four platforms come out of one pipeline codebase, not four that drifted apart.</p>
     <p>A Unity build log runs to tens of thousands of lines, and the line that explains the failure is rarely near the end, so reading one was a skill the team did not have a reason to acquire. The pipelines parse the log and extract the errors that caused the failure, in priority order, onto the build page. A developer sees why their build broke without opening a log or asking DevOps to read it for them.</p>
-    <p>I also rebuilt the artifact upload path that used to fail intermittently under load; uploads now run to completion without anyone watching them.</p>
 
     <h2>Migrating without stopping</h2>
     <p>Moving CI onto the new environment ran underneath a team that kept building all day; there was no freeze to hide behind. Rather than run a second set of pipelines for the new fleet, I unified the pipeline codebase so the same definitions cover both the AWS agents and the machines that stayed bare metal, moved pipelines across one at a time, and deleted nothing until the new path had run enough real builds to be trusted. The team shipped through the cutover without losing a release.</p>
-    <p>When the game's backend later moved from Azure to Metaplay, the platform's share of that was deliberately small: the Azure deployment pipeline was retired and a Metaplay one took its place, and the old path kept working right up to the cutover.</p>
 
     <h2>Running it cheap</h2>
     <p>A cloud build platform is a bill somebody pays, so cost was engineered like any other requirement. The agents run on spot instances instead of dedicated ones, which is only cheap if you respect how spot behaves: AWS can reclaim an instance mid-build, and a naive pipeline that retries from scratch throws away hours of build time every time it happens. Retry that way often enough and spot costs more than the dedicated capacity it was supposed to undercut. Our pipelines resume from the step that was running when the reclaim hit, so a reclaimed instance costs minutes, not a build.</p>
-    <p>Storage got the same treatment. Workspace-sized EBS volumes are expensive, so only the busiest pipelines keep persistent volumes. Everything sporadic, including developer test builds, restores its workspace from snapshots instead, which trades a little startup time on rare builds for not paying for idle disks. What a build costs still lands where the builds are, on the team's <a href="devops-dashboard.html">ops dashboard</a>.</p>
+    <p>Storage got the same treatment. Workspace-sized EBS volumes are expensive, so only the busiest pipelines keep persistent volumes. Everything sporadic, including developer test builds, restores its workspace from snapshots instead, which trades a little startup time on rare builds for not paying for idle disks. What a build costs still lands where the builds are, on the team's ops dashboard.</p>
 
     <h2>What it added up to</h2>
     <p>The platform is described in Terraform, the pipelines live in one codebase that ships four platforms, and what a build costs is on a dashboard anyone can open. Roughly fifty developers and QA build on it every day, the migration never cost them a release, and growing the platform is a change someone can review rather than hardware someone has to order.</p>
@@ -197,9 +195,6 @@
   <div class="wrap">
     <ul class="links">
       <li><a href="../index.html">Home</a></li>
-      <li><a href="build-tooling.html">Build tooling</a></li>
-      <li><a href="devops-dashboard.html">DevOps dashboard</a></li>
-      <li><a href="gameplay.html">Gameplay</a></li>
       <li><a href="../Dankann-Weissmuller-Resume.pdf" download>Resume</a></li>
       <li><a href="mailto:dankann.weissmuller@gmail.com">Email</a></li>
     </ul>
