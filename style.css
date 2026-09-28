@@ -7,7 +7,8 @@
   --bg-deep: #070706;
   --panel: #141210;
   --text: #f3ede3;
-  --muted: #9d9488;
+  --muted: #a89d8e;
+  --text-body: #e8e2d6;
   --line: rgba(243, 237, 227, 0.14);
   --line2: rgba(243, 237, 227, 0.32);
   --rule: rgba(243, 237, 227, 0.55);
@@ -33,6 +34,7 @@
     --panel: #fffdf7;
     --text: #191713;
     --muted: #5d564c;
+    --text-body: #2e2a24;
     --line: rgba(25, 23, 19, 0.16);
     --line2: rgba(25, 23, 19, 0.32);
     --rule: rgba(25, 23, 19, 0.6);
@@ -60,7 +62,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--body);
-  font-size: 1.075rem;
+  font-size: 1.25rem;
   line-height: 1.6;
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
@@ -403,7 +405,7 @@ body.motion-off .hover-vid {
 
 .plate .what {
   display: block;
-  color: var(--muted);
+  color: var(--text-body);
   max-width: 30rem;
 }
 
@@ -443,7 +445,7 @@ body.motion-off .hover-vid {
 }
 
 .index p {
-  color: var(--muted);
+  color: var(--text-body);
   max-width: 30rem;
   font-size: 1.02rem;
   margin: 0;
@@ -727,7 +729,7 @@ body:has(#contact) footer {
 }
 
 .detail ul li {
-  color: var(--muted);
+  color: var(--text-body);
 }
 
 /* Case study ------------------------------------------------------------ */
@@ -768,6 +770,14 @@ body:has(#contact) footer {
 
 .case-head .eyebrow {
   margin-bottom: 1.25rem;
+}
+
+.case-head .eyebrow,
+.case-head h1,
+.case-head .standfirst,
+.case-head .facts {
+  max-width: 42rem;
+  margin-inline: auto;
 }
 
 .case-head h1 {
@@ -824,11 +834,17 @@ body:has(#contact) footer {
 .case p,
 .case ul,
 .case h2 {
-  max-width: 38rem;
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.case .detail {
+  max-width: 42rem;
+  margin-inline: auto;
 }
 
 .case p {
-  color: var(--muted);
+  color: var(--text-body);
 }
 
 .case strong {
@@ -838,7 +854,7 @@ body:has(#contact) footer {
 
 .case h2 {
   font-size: clamp(1.55rem, 1.2rem + 1.1vw, 2.1rem);
-  margin: 3.25rem 0 1.1rem;
+  margin: 3.25rem auto 1.1rem;
   padding-top: 1.2rem;
   border-top: 1px solid var(--line);
 }
@@ -850,7 +866,7 @@ body:has(#contact) footer {
 }
 
 .case ul li {
-  color: var(--muted);
+  color: var(--text-body);
   margin-bottom: 0.6em;
 }
 
@@ -899,7 +915,7 @@ figcaption {
   font-family: var(--mono);
   font-size: 0.7rem;
   line-height: 1.65;
-  color: var(--muted);
+  color: var(--text-body);
   margin-top: 1rem;
   min-width: 44rem;
 }
