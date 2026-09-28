@@ -130,7 +130,7 @@
     <p>The dashboard carries that as panels next to everything else. Build cost is one of them, sitting beside the builds it came from, so "this pipeline got more expensive" and "this pipeline changed last week" land on one screen instead of in two separate investigations. AWS Cost Explorer panels cover the wider infrastructure spend around it. Build cost tracking existed before the dashboard as a script I ran by hand, and that script was retired once the panel replaced it, so this consolidated a place to look rather than adding one. The <a href="build-platform.html">build platform case study</a> covers how that tracking came about.</p>
 
     <h2>Comparing devices</h2>
-    <p>Performance on a mobile title is a comparison problem. One device's numbers alone say very little, because the real question is whether this device is worse than it was, or worse than the others. The dashboard puts runs from different devices side by side, which is what turns a regression into something visible instead of something argued about.</p>
+    <p>Performance on a mobile title is a comparison problem. One device's numbers alone say very little, because the question is whether this device is worse than it was, or worse than the others. The dashboard puts runs from different devices side by side, which is what turns a regression into something visible instead of something argued about.</p>
 
     <h2>Why Node.js on Lambda</h2>
     <p>An internal dashboard has bursty traffic. It is busy when a build finishes or a release is going out, and idle overnight and at weekends. Keeping a server running and patched for that shape of load is work with no payoff, and most of what the backend does is call other APIs and wait for them.</p>
