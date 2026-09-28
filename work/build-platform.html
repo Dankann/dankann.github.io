@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A build platform for a live F2P game · Dankann Weissmüller</title>
-<meta name="description" content="Building Godforge's build and release platform from scratch on AWS and Terraform, migrating CI and the game's backend pipelines onto new homes without interrupting releases, then adding cost-per-build tracking.">
+<meta name="description" content="Building Godforge's build and release platform from scratch on AWS and Terraform, migrating CI off bare metal without interrupting releases, and engineering the cost of running it on spot capacity.">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="A build platform for a live F2P game">
-<meta property="og:description" content="New AWS and Terraform build infrastructure, two migrations that never stopped releases, then cost-per-build tracking on top.">
+<meta property="og:description" content="New AWS and Terraform build infrastructure, a live migration that never stopped releases, and spot builds that survive being reclaimed.">
 <meta property="og:url" content="https://dankann.github.io/work/build-platform.html">
 <meta property="og:image" content="https://dankann.github.io/assets/img/godforge.png">
 <link rel="canonical" href="https://dankann.github.io/work/build-platform.html">
@@ -28,7 +28,7 @@
   <div class="wrap">
     <p class="eyebrow">Case study · Infrastructure</p>
     <h1>A build platform for a live F2P game</h1>
-    <p class="standfirst"><a href="https://godforge.gg/" rel="noopener">Godforge</a> is a live free-to-play title at Ironbelly Studios. Over two years I built its build platform from scratch on AWS, ran two migrations without interrupting releases, and added cost tracking so the team can see what a build costs.</p>
+    <p class="standfirst"><a href="https://godforge.gg/" rel="noopener">Godforge</a> is a live free-to-play title at Ironbelly Studios. Over two years I built its build platform from scratch on AWS, moved CI onto it without interrupting releases, and engineered its running costs down with spot capacity, snapshot-backed workspaces and builds that resume where a reclaim killed them.</p>
     <dl class="facts">
       <div><dt>Role</dt><dd>Senior Software Engineer</dd></div>
       <div><dt>Where</dt><dd>Ironbelly Studios, on Godforge</dd></div>
@@ -44,26 +44,25 @@
   <div class="wrap">
 
     <h2>Where it started</h2>
-    <p>Godforge was already shipping every day, on a build estate that had grown alongside the game. Jenkins ran on bare-metal machines. Parts of the release path went through Azure Storage Queues and PlayFab CloudScript. Agent machines carried state that had accumulated over years of use rather than being described anywhere, so working out why a build failed usually started by connecting to the machine that ran it.</p>
-    <p>That is the shape most titles reach when the game grows faster than the tooling around it, and it costs more once the game is live, because a broken pipeline is a blocked patch. The job was to give Godforge a build platform that could be reasoned about, reproduced, and handed to somebody else.</p>
+    <p>Godforge was already shipping every day, on a build estate that had grown alongside the game. Jenkins ran on bare-metal machines, and none of it existed as code: not the infrastructure, not the build jobs, not the Jenkins configuration itself. Every machine carried years of hand-applied state, so fixing an agent meant working out what made that one machine special, and scaling meant buying hardware and setting it up the same way. Parts of the release path went through Azure Storage Queues and PlayFab CloudScript.</p>
+    <p>That is the shape most titles reach when the game grows faster than the tooling around it, and it costs more once the game is live, because a broken pipeline is a blocked patch. The job was to give Godforge a build platform that is configurable, reliable and scalable, and that can be rebuilt from code instead of remembered.</p>
 
     <h2>Constraints</h2>
-    <p>Three things shaped every decision.</p>
+    <p>Two constraints shaped every decision.</p>
     <ul>
       <li><strong>Releases could not stop.</strong> A live game ships on its own cadence, and the migration had to happen underneath a team that kept building all day. There was no maintenance window to negotiate for.</li>
       <li><strong>Unity builds are not stateless.</strong> A build with no cache can take multiple hours, and even a full cached build takes over an hour. Any design that threw away the workspace between builds would buy tidy infrastructure with hours of engineer waiting time.</li>
-      <li><strong>The platform would outlive my time as its only operator.</strong> Anything that depended on one person's knowledge to run was a risk, so the design leaned on Terraform and on pipelines that explain their own failures.</li>
     </ul>
 
     <h2>The platform</h2>
     <p>Everything is defined in Terraform: VPC and networking, security groups, IAM roles, the EC2 Jenkins controller, and the build agent fleet. One description of the platform lives in source control, and applying it is how the platform changes.</p>
-    <p>Unity agents keep their workspaces on EBS volumes that outlive the instance. When an agent starts a job it selects a workspace volume dynamically, attaches it, and builds against warm state. When the job ends the volume is detached and returned to the pool. Attach and detach are the two operations most likely to fail halfway, so the selection logic is self-healing: it reconciles what AWS says is attached against what the fleet believes, recovers from partial attachments, and sweeps orphaned volumes left behind by instances that died mid-build.</p>
+    <p>Unity agents keep their workspaces on EBS volumes that outlive the instance. When an agent starts a job it selects a workspace volume dynamically, attaches it, and builds against warm state. When the job ends the volume is detached and returned to the pool. The selection logic assumes the cloud can always surprise it, so it is written to self-heal: it reconciles what AWS says is attached against what the fleet believes, recovers a partial attachment in place, and sweeps orphaned volumes left behind by instances that died mid-build. Failures there are rare; the point is that nobody has to notice one for the fleet to recover.</p>
     <p>The fleet stays disposable without making builds slow. An instance can be replaced at any time, and the workspace it was building in is kept, so recovering from a dead agent costs a retry instead of a cold build.</p>
     <details class="detail">
       <summary>The volume lifecycle in detail</summary>
       <ul>
         <li>An agent picking up a job selects a free workspace volume from the pool, attaches it, and builds against whatever state the previous job on that volume left behind.</li>
-        <li>Attach and detach are the two steps most likely to fail halfway, so the fleet never trusts its own record of what is mounted. It reconciles against what AWS reports before it acts.</li>
+        <li>The fleet never trusts its own record of what is mounted. It reconciles against what AWS reports before it acts, so a stale record cannot strand a volume.</li>
         <li>A partial attachment is recovered in place rather than abandoned, so a half-attached volume does not cost the job a cold build.</li>
         <li>Volumes orphaned by instances that died mid-build are swept and returned to the pool, so a dead agent does not quietly remove capacity from the fleet.</li>
         <li>Because the workspace outlives the instance, replacing an agent costs a retry instead of a build from cold. That is what makes a spot fleet usable for Unity builds at all.</li>
@@ -165,18 +164,18 @@
     <h2>Pipelines on top</h2>
     <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines covering Android, iOS, Windows and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and which old builds and workspaces get cleaned up. Four platforms come out of one pipeline codebase, not four that drifted apart.</p>
     <p>A Unity build log runs to tens of thousands of lines, and the line that explains the failure is rarely near the end, so reading one was a skill the team did not have a reason to acquire. The pipelines parse the log and extract the errors that caused the failure, in priority order, onto the build page. A developer sees why their build broke without opening a log or asking DevOps to read it for them.</p>
-    <p>Artifact uploads were the other daily cost. They failed intermittently under load often enough that people had learned to just retry, which put a manual step in front of every release that hit a bad moment. Rebuilding the upload path stopped that failure. Uploads run to completion on their own, and nobody watches them any more.</p>
+    <p>I also rebuilt the artifact upload path that used to fail intermittently under load; uploads now run to completion without anyone watching them.</p>
 
     <h2>Migrating without stopping</h2>
-    <p>Two migrations ran on this platform. The first moved CI onto the new AWS environment. Rather than run a second set of pipelines for the new fleet, I unified the pipeline codebase so the same definitions cover both the AWS agents and the machines that stayed bare metal. One codebase means a fix lands once for every platform instead of being copied into a second set and slowly falling out of step. The second migration moved the game's build and release pipelines from Azure to Metaplay, a managed game backend platform. The old path had to keep working right up to the cutover, so this also meant bypassing the PlayFab CloudScript layer the legacy backend ran on and hardening its Azure Storage Queue handling.</p>
-    <p>Neither migration got a freeze, so both were designed to stay reversible. The new path ran in parallel with the old one, pipelines moved across one at a time, and nothing was deleted until the replacement had run enough real builds to be trusted. Every step could be undone on the day it was taken, which is what let the work happen underneath a team that kept building all day. The team shipped through both cutovers without losing a release. I also wrote the post-cutover operational guide the team still runs on, so day-to-day operation of the platform does not depend on me.</p>
+    <p>Moving CI onto the new environment ran underneath a team that kept building all day; there was no freeze to hide behind. Rather than run a second set of pipelines for the new fleet, I unified the pipeline codebase so the same definitions cover both the AWS agents and the machines that stayed bare metal, moved pipelines across one at a time, and deleted nothing until the new path had run enough real builds to be trusted. The team shipped through the cutover without losing a release.</p>
+    <p>When the game's backend later moved from Azure to Metaplay, the platform's share of that was deliberately small: the Azure deployment pipeline was retired and a Metaplay one took its place, and the old path kept working right up to the cutover.</p>
 
-    <h2>Then, the cost</h2>
-    <p>Running builds in the cloud turns machine time into a line on a bill, and nobody could say what a single build contributed to it. Without that number, questions like whether a nightly job earns its schedule, or whether a pipeline change made things more expensive, had no answer anyone could check.</p>
-    <p>I built per-build cost tracking and put it where the builds already are, as a live panel in an internal ops dashboard on Node.js and AWS Lambda. Cost became something a lead can look up in the same place they look up the build, instead of a question that needed someone to go and work it out. That dashboard grew into the team's <a href="devops-dashboard.html">single place for everything DevOps</a>, and cost is one part of it.</p>
+    <h2>Running it cheap</h2>
+    <p>A cloud build platform is a bill somebody pays, so cost was engineered like any other requirement. The agents run on spot instances instead of dedicated ones, which is only cheap if you respect how spot behaves: AWS can reclaim an instance mid-build, and a naive pipeline that retries from scratch throws away hours of build time every time it happens. Retry that way often enough and spot costs more than the dedicated capacity it was supposed to undercut. Our pipelines resume from the step that was running when the reclaim hit, so a reclaimed instance costs minutes, not a build.</p>
+    <p>Storage got the same treatment. Workspace-sized EBS volumes are expensive, so only the busiest pipelines keep persistent volumes. Everything sporadic, including developer test builds, restores its workspace from snapshots instead, which trades a little startup time on rare builds for not paying for idle disks. What a build costs still lands where the builds are, on the team's <a href="devops-dashboard.html">ops dashboard</a>.</p>
 
     <h2>What it added up to</h2>
-    <p>The platform is described in Terraform, the pipelines live in one codebase that ships four platforms, and what a build costs is on a dashboard anyone can open. Roughly fifty developers and QA build on it every day, neither migration cost them a release, and growing the platform is now a change someone can review rather than hardware someone has to order.</p>
+    <p>The platform is described in Terraform, the pipelines live in one codebase that ships four platforms, and what a build costs is on a dashboard anyone can open. Roughly fifty developers and QA build on it every day, the migration never cost them a release, and growing the platform is a change someone can review rather than hardware someone has to order.</p>
 
     <ul class="stack">
       <li>Terraform</li>
