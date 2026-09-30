@@ -162,7 +162,7 @@
     </figure>
 
     <h2>Pipelines on top</h2>
-    <p>On top of that sits the Jenkins estate I own end to end: multi-platform Unity build pipelines covering Android, iOS, Windows and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and which old builds and workspaces get cleaned up. Four platforms come out of one pipeline codebase, not four that drifted apart.</p>
+    <p>On top of that sits the Jenkins estate I build and run end to end: multi-platform Unity build pipelines covering Android, iOS, Windows and macOS, game-config and Addressables builds, and orchestrator and retention pipelines that decide what runs and which old builds and workspaces get cleaned up. Four platforms come out of one pipeline codebase, not four that drifted apart.</p>
     <p>A Unity build log runs to tens of thousands of lines, and the line that explains the failure is rarely near the end, so reading one was a skill the team did not have a reason to acquire. The pipelines parse the log and extract the errors that caused the failure, in priority order, onto the build page. A developer sees why their build broke without opening a log or asking DevOps to read it for them.</p>
 
     <h2>Migrating without stopping</h2>
